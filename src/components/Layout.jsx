@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -14,9 +15,9 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
-import { Image } from "@material-ui/icons";
+import PeopleAltRoundedIcon from "@material-ui/icons/PeopleAltRounded";
+import EventNoteRoundedIcon from "@material-ui/icons/EventNoteRounded";
+import AssignmentTurnedInRoundedIcon from "@material-ui/icons/AssignmentTurnedInRounded";
 const drawerWidth = 170;
 
 const useStyles = makeStyles((theme) => ({
@@ -83,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Layout(props) {
   const classes = useStyles();
+  const history = useHistory();
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -133,30 +135,34 @@ export default function Layout(props) {
         }}
       >
         <div className={classes.toolbar}>
-          <img src="/logomini.jpg" width="115" height="100"></img>
+          <img src="/logomini.jpg" width="118" height="90" alt="MCG Logo"></img>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
         </div>
-        <Divider />
+
         <List>
-          <ListItem button key="Schedule">
+          <ListItem
+            button
+            key="Schedule"
+            onClick={() => history.push("/schedule")}
+          >
             <ListItemIcon>
-              <InboxIcon />
+              <EventNoteRoundedIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Schedule" />
           </ListItem>
           <Divider variant="middle" />
-          <ListItem button key="Staff">
+          <ListItem button key="Staff" onClick={() => history.push("/staff")}>
             <ListItemIcon>
-              <MailIcon />
+              <PeopleAltRoundedIcon />
             </ListItemIcon>
             <ListItemText primary="Staff" />
           </ListItem>
           <Divider variant="middle" />
-          <ListItem button key="Tasks">
+          <ListItem button key="Tasks" onClick={() => history.push("/tasks")}>
             <ListItemIcon>
-              <MailIcon />
+              <AssignmentTurnedInRoundedIcon />
             </ListItemIcon>
             <ListItemText primary="Tasks" />
           </ListItem>
