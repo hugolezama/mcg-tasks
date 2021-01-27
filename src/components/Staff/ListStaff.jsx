@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Chip from '@material-ui/core/Chip';
-import HomeIcon from '@material-ui/icons/Home';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -40,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     // backgroundColor: '#A7ADBA'
   },
   table: {
-    minWidth: 750
+    minWidth: 450
   },
 
   tableRow: {
@@ -79,7 +78,7 @@ export default function ListStaff({ staffList, handleSaveStaff, handleRemoveStaf
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(emptyStaff);
 
@@ -106,9 +105,9 @@ export default function ListStaff({ staffList, handleSaveStaff, handleRemoveStaf
     <div className={classes.root}>
       <div
         style={{
-          paddingBottom: 20,
+          paddingBottom: 10,
           display: 'flex',
-          justifyContent: 'flex-end'
+          justifyContent: 'center'
         }}
       >
         <Button
