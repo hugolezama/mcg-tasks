@@ -1,7 +1,7 @@
 import Layout from "./components/Layout";
 import { Route, Switch } from "react-router-dom";
 import Home from "./components/Home";
-import Tasks from "./components/Tasks";
+import Tasks from "./components/Tasks/Tasks";
 import Schedule from "./components/Schedule";
 import Staff from "./components/Staff/Staff";
 

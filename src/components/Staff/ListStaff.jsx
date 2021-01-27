@@ -1,140 +1,90 @@
-import React from "react";
+import React, { useState } from 'react';
 
-import PropTypes from "prop-types";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Paper from "@material-ui/core/Paper";
-import { getComparator, stableSort } from "../../utils/utils";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Button from "@material-ui/core/Button";
-import { IconButton } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import { getComparator, stableSort } from '../../utils/utils';
+import { Button, IconButton } from '@material-ui/core';
 
-const getArray = (rowsRaw) =>
-  Object.keys(rowsRaw).map((key) => ({
-    id: key,
-    name: rowsRaw[key].name || "",
-    room: rowsRaw[key].room || "",
-    role: rowsRaw[key].role || "",
-  }));
+import CreateRoundedIcon from '@material-ui/icons/CreateRounded';
+import StaffDialog from './StaffDialog';
+import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
+
+import TableHeader from '../Common/TableHeader';
 
 const headCells = [
-  { id: "name", disablePadding: true, label: "Name" },
-  { id: "room", disablePadding: false, label: "Room" },
-  { id: "role", disablePadding: false, label: "Role" },
+  { id: 'name', disablePadding: true, label: 'Name' },
+  { id: 'room', disablePadding: false, label: 'Room' },
+  { id: 'role', disablePadding: false, label: 'Role' }
 ];
-
-function EnhancedTableHead({ classes, order, orderBy, onRequestSort }) {
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell></TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align="left"
-            padding={headCell.disablePadding ? "none" : "default"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-              className={classes.headerLabel}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
+const emptyStaff = {
+  name: '',
+  role: '',
+  room: ''
 };
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: '100%'
   },
   paper: {
-    width: "100%",
-    marginBottom: theme.spacing(2),
+    width: '100%',
+    marginBottom: theme.spacing(2)
   },
   table: {
-    minWidth: 750,
+    minWidth: 750
   },
   visuallyHidden: {
     border: 0,
-    clip: "rect(0 0 0 0)",
+    clip: 'rect(0 0 0 0)',
     height: 1,
     margin: -1,
-    overflow: "hidden",
+    overflow: 'hidden',
     padding: 0,
-    position: "absolute",
+    position: 'absolute',
     top: 20,
-    width: 1,
+    width: 1
   },
   headerLabel: {
-    fontWeight: "bold",
-    fontSize: 16,
+    fontWeight: 'bold',
+    fontSize: 16
   },
+  tableCellCheck: {
+    width: 120
+  }
 }));
 
 ListStaff.propTypes = {
-  staffList: PropTypes.object.isRequired,
+  staffList: PropTypes.array.isRequired,
+  handleSaveStaff: PropTypes.func.isRequired,
+  handleRemoveStaff: PropTypes.func.isRequired
 };
 
-export default function ListStaff({ staffList }) {
+export default function ListStaff({ staffList, handleSaveStaff, handleRemoveStaff }) {
   const classes = useStyles();
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("name");
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [dialogOpen, setDialogOpen] = React.useState(false);
-  const rows = getArray(staffList);
-
-  const handleOpenDialog = () => {
-    setDialogOpen(true);
-  };
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('name');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [currentRecord, setCurrentRecord] = useState(emptyStaff);
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
   };
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
+  const handleRequestSort = (_event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_event, newPage) => {
     setPage(newPage);
   };
 
@@ -143,49 +93,59 @@ export default function ListStaff({ staffList }) {
     setPage(0);
   };
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, staffList.length - page * rowsPerPage);
   return (
     <div className={classes.root}>
+      <div
+        style={{
+          paddingBottom: 20,
+          display: 'flex',
+          justifyContent: 'flex-end'
+        }}
+      >
+        <Button
+          onClick={() => {
+            setCurrentRecord(emptyStaff);
+            setDialogOpen(true);
+          }}
+          variant="outlined"
+          color="primary"
+          startIcon={<AddCircleRoundedIcon />}
+        >
+          Add Staff
+        </Button>
+      </div>
+
       <Paper className={classes.paper}>
         <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size="medium"
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
+          <Table className={classes.table} aria-labelledby="tableTitle" size="medium" aria-label="enhanced table">
+            <TableHeader
+              headCells={headCells}
               classes={classes}
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={staffList.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(staffList, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.name}
-                    >
+                    <TableRow hover tabIndex={-1} key={row.name}>
                       <TableCell padding="checkbox">
-                        <IconButton onClick={handleOpenDialog}>
-                          <EditIcon color="primary"></EditIcon>
+                        <IconButton
+                          onClick={() => {
+                            setCurrentRecord(row);
+                            setDialogOpen(true);
+                          }}
+                        >
+                          <CreateRoundedIcon color="primary"></CreateRoundedIcon>
                         </IconButton>
                       </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
+                      <TableCell component="th" id={labelId} scope="row" padding="none">
                         {row.name}
                       </TableCell>
                       <TableCell>{row.room}</TableCell>
@@ -204,39 +164,20 @@ export default function ListStaff({ staffList }) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={staffList.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
-
-        <Dialog
-          open={dialogOpen}
-          onClose={handleCloseDialog}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">Add New Staff Member</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Email Address"
-              type="email"
-              fullWidth
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleCloseDialog} color="primary">
-              Subscribe
-            </Button>
-          </DialogActions>
-        </Dialog>
       </Paper>
+      <StaffDialog
+        handleSaveStaff={handleSaveStaff}
+        dialogOpen={dialogOpen}
+        handleCloseDialog={handleCloseDialog}
+        initialData={currentRecord}
+        handleRemoveStaff={handleRemoveStaff}
+      ></StaffDialog>
     </div>
   );
 }

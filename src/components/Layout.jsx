@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Layout(props) {
   const classes = useStyles();
   const history = useHistory();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -155,14 +155,14 @@ export default function Layout(props) {
           <Divider variant="middle" />
           <ListItem button key="Staff" onClick={() => history.push("/staff")}>
             <ListItemIcon>
-              <PeopleAltRoundedIcon />
+              <PeopleAltRoundedIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Staff" />
           </ListItem>
           <Divider variant="middle" />
           <ListItem button key="Tasks" onClick={() => history.push("/tasks")}>
             <ListItemIcon>
-              <AssignmentTurnedInRoundedIcon />
+              <AssignmentTurnedInRoundedIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Tasks" />
           </ListItem>
