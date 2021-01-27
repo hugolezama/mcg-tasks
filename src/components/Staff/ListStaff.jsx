@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-
 import PropTypes from 'prop-types';
+import Chip from '@material-ui/core/Chip';
+import HomeIcon from '@material-ui/icons/Home';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -36,9 +37,16 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     width: '100%',
     marginBottom: theme.spacing(2)
+    // backgroundColor: '#A7ADBA'
   },
   table: {
     minWidth: 750
+  },
+
+  tableRow: {
+    '&:hover': {
+      backgroundColor: '#edfff3 !important'
+    }
   },
   visuallyHidden: {
     border: 0,
@@ -56,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16
   },
   tableCellCheck: {
-    width: 120
+    width: 65
   }
 }));
 
@@ -131,11 +139,11 @@ export default function ListStaff({ staffList, handleSaveStaff, handleRemoveStaf
               {stableSort(staffList, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const labelId = `enhanced-table-checkbox-${index}`;
+                  const labelId = `staff-table-${index}`;
 
                   return (
-                    <TableRow hover tabIndex={-1} key={row.name}>
-                      <TableCell padding="checkbox">
+                    <TableRow hover tabIndex={-1} key={row.name} className={classes.tableRow}>
+                      <TableCell padding="checkbox" className={classes.tableCellCheck}>
                         <IconButton
                           onClick={() => {
                             setCurrentRecord(row);
@@ -148,7 +156,15 @@ export default function ListStaff({ staffList, handleSaveStaff, handleRemoveStaf
                       <TableCell component="th" id={labelId} scope="row" padding="none">
                         {row.name}
                       </TableCell>
-                      <TableCell>{row.room}</TableCell>
+                      <TableCell>
+                        <Chip
+                          style={{
+                            backgroundColor: row.room,
+                            filter: 'brightness(0.95)',
+                            boxShadow: '5px 5px 10px grey'
+                          }}
+                        />
+                      </TableCell>
                       <TableCell>{row.role}</TableCell>
                     </TableRow>
                   );
