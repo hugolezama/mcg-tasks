@@ -5,7 +5,8 @@ import { createMuiTheme, darken, lighten } from '@material-ui/core/styles';
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: green[600]
+      main: green[600],
+      light: lighten(green[600], 0.9)
     },
     secondary: {
       dark: darken(purple[400], 0.2),

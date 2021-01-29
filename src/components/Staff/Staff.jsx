@@ -70,13 +70,11 @@ const Staff = () => {
   }, []);
 
   return (
-    <div>
-      <ListStaff
-        staffList={stateStaff}
-        handleSaveStaff={saveStaffHandler}
-        handleRemoveStaff={removeStaffHandler}
-      ></ListStaff>
-    </div>
+    <ListStaff
+      staffList={stateStaff}
+      handleSaveStaff={saveStaffHandler}
+      handleRemoveStaff={removeStaffHandler}
+    ></ListStaff>
   );
 };
 

@@ -1,5 +1,6 @@
-import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
+import { IconButton, TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 
 TableHeader.propTypes = {
   headCells: PropTypes.array.isRequired,
@@ -7,10 +8,11 @@ TableHeader.propTypes = {
   onRequestSort: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired
+  rowCount: PropTypes.number.isRequired,
+  handleAddStaffButton: PropTypes.func.isRequired
 };
 
-export default function TableHeader({ headCells, classes, order, orderBy, onRequestSort }) {
+export default function TableHeader({ headCells, classes, order, orderBy, onRequestSort, handleAddStaffButton }) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -18,7 +20,11 @@ export default function TableHeader({ headCells, classes, order, orderBy, onRequ
   return (
     <TableHead>
       <TableRow>
-        <TableCell></TableCell>
+        <TableCell>
+          <IconButton onClick={handleAddStaffButton}>
+            <AddCircleRoundedIcon color="primary" fontSize="large" />
+          </IconButton>
+        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}

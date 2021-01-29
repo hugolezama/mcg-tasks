@@ -10,11 +10,10 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { getComparator, stableSort } from '../../utils/utils';
-import { Button, IconButton } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 
 import CreateRoundedIcon from '@material-ui/icons/CreateRounded';
 import StaffDialog from './StaffDialog';
-import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 
 import TableHeader from '../Common/TableHeader';
 
@@ -39,12 +38,12 @@ const useStyles = makeStyles((theme) => ({
     // backgroundColor: '#A7ADBA'
   },
   table: {
-    minWidth: 450
+    minWidth: 400
   },
 
   tableRow: {
     '&:hover': {
-      backgroundColor: '#edfff3 !important'
+      backgroundColor: theme.palette.primary.light + ' !important'
     }
   },
   visuallyHidden: {
@@ -100,29 +99,14 @@ export default function ListStaff({ staffList, handleSaveStaff, handleRemoveStaf
     setPage(0);
   };
 
+  const handleAddStaffButton = () => {
+    setCurrentRecord(emptyStaff);
+    setDialogOpen(true);
+  };
+
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, staffList.length - page * rowsPerPage);
   return (
     <div className={classes.root}>
-      <div
-        style={{
-          paddingBottom: 10,
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-      >
-        <Button
-          onClick={() => {
-            setCurrentRecord(emptyStaff);
-            setDialogOpen(true);
-          }}
-          variant="outlined"
-          color="primary"
-          startIcon={<AddCircleRoundedIcon />}
-        >
-          Add Staff
-        </Button>
-      </div>
-
       <Paper className={classes.paper}>
         <TableContainer>
           <Table className={classes.table} aria-labelledby="tableTitle" size="medium" aria-label="enhanced table">
@@ -133,6 +117,7 @@ export default function ListStaff({ staffList, handleSaveStaff, handleRemoveStaf
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
               rowCount={staffList.length}
+              handleAddStaffButton={handleAddStaffButton}
             />
             <TableBody>
               {stableSort(staffList, getComparator(order, orderBy))

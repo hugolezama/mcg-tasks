@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,18 +12,25 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import PeopleAltRoundedIcon from '@material-ui/icons/PeopleAltRounded';
 import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
 import AssignmentTurnedInRoundedIcon from '@material-ui/icons/AssignmentTurnedInRounded';
-import { Container } from '@material-ui/core';
+import { Box, Container, Paper } from '@material-ui/core';
+
+import moment from 'moment';
+import { WeekContext } from '../contexts/WeekContext';
 const drawerWidth = 170;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex'
+  },
+  grow: {
+    flexGrow: 1
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -64,10 +71,7 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen
     }),
     overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9) + 1
-    }
+    width: theme.spacing(7) + 1
   },
   toolbar: {
     display: 'flex',
@@ -79,14 +83,25 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3)
+    padding: theme.spacing(1)
+  },
+  sectionDesktop: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end'
+  },
+  currentWeek: {
+    borderRadius: 50,
+    backgroundColor: theme.palette.primary.light
   }
 }));
 
 export default function Layout(props) {
   const classes = useStyles();
   const history = useHistory();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
+
+  const { startOfWeek, setStartOfWeek, currentWeek, setCurrentWeek } = useContext(WeekContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -94,6 +109,18 @@ export default function Layout(props) {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const nextWeek = () => {
+    const nextWeek = moment(startOfWeek).add(1, 'week');
+    setStartOfWeek(nextWeek);
+    setCurrentWeek(nextWeek.format('MM/DD/YYYY') + ' - ' + moment(nextWeek).add(5, 'days').format('MM/DD/YYYY'));
+  };
+
+  const prevWeek = () => {
+    const prevWeek = moment(startOfWeek).subtract(1, 'week');
+    setStartOfWeek(prevWeek);
+    setCurrentWeek(prevWeek.format('MM/DD/YYYY') + ' - ' + moment(prevWeek).add(5, 'days').format('MM/DD/YYYY'));
   };
 
   return (
@@ -117,11 +144,27 @@ export default function Layout(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h5" noWrap>
-            Staff Scheduler
-          </Typography>
+          <Box display={{ xs: 'none', md: 'inline-block' }}>
+            <Typography variant="h5" noWrap>
+              Montessori Children's Garden Scheduler
+            </Typography>
+          </Box>
+
+          <div className={classes.grow} />
+          <div className={classes.sectionDesktop}>
+            <Paper className={classes.currentWeek}>
+              <IconButton onClick={prevWeek}>
+                <ChevronLeftIcon />
+              </IconButton>
+              {currentWeek}
+              <IconButton onClick={nextWeek}>
+                <ChevronRightIcon />
+              </IconButton>
+            </Paper>
+          </div>
         </Toolbar>
       </AppBar>
+
       <Drawer
         variant="permanent"
         className={clsx(classes.drawer, {
@@ -136,7 +179,9 @@ export default function Layout(props) {
         }}
       >
         <div className={classes.toolbar}>
-          <img src="/logomini2.jpg" width="115" height="90" alt="MCG Logo" hidden={!open}></img>
+          <Box display={{ xs: 'none', sm: 'inline-block' }}>
+            <img src="/logomini2.jpg" width="115" height="90" alt="MCG Logo" hidden={!open}></img>
+          </Box>
 
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
@@ -166,6 +211,7 @@ export default function Layout(props) {
           </ListItem>
         </List>
       </Drawer>
+
       <Container className={classes.content}>
         <div className={classes.toolbar} />
         {props.children}
