@@ -18,7 +18,7 @@ import StaffDialog from './StaffDialog';
 import TableHeader from '../Common/TableHeader';
 
 const headCells = [
-  { id: 'name', disablePadding: true, label: 'Name' },
+  { id: 'name', disablePadding: false, label: 'Name' },
   { id: 'room', disablePadding: false, label: 'Room' },
   { id: 'role', disablePadding: false, label: 'Role' }
 ];
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16
   },
   tableCellCheck: {
-    width: 65
+    width: 80
   }
 }));
 
@@ -137,7 +137,7 @@ export default function ListStaff({ staffList, handleSaveStaff, handleRemoveStaf
                           <CreateRoundedIcon color="primary"></CreateRoundedIcon>
                         </IconButton>
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      <TableCell id={labelId} align="left">
                         {row.name}
                       </TableCell>
                       <TableCell>

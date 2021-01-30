@@ -1,4 +1,4 @@
-import { IconButton, TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
+import { IconButton, TableCell, TableHead, TableRow, TableSortLabel, Tooltip } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 
@@ -20,10 +20,12 @@ export default function TableHeader({ headCells, classes, order, orderBy, onRequ
   return (
     <TableHead>
       <TableRow>
-        <TableCell>
-          <IconButton onClick={handleAddStaffButton}>
-            <AddCircleRoundedIcon color="primary" fontSize="large" />
-          </IconButton>
+        <TableCell align="left" padding="none">
+          <Tooltip title="Add Staff">
+            <IconButton onClick={handleAddStaffButton}>
+              <AddCircleRoundedIcon color="primary" fontSize="large" />
+            </IconButton>
+          </Tooltip>
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell

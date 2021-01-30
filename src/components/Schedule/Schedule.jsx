@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 
 import { WeekContext } from '../../contexts/WeekContext';
@@ -40,39 +40,39 @@ const Schedule = () => {
     })();
   }, [startOfWeek]);
 
-  // const saveScheduleHandler = useCallback(async (staff) => {
-  //   console.log('SAVING STAFF');
-  //   try {
-  //     const ref = firebaseRef.child('staff');
-  //     if (staff.id) {
-  //       await ref.child(staff.id).update({
-  //         name: staff.name,
-  //         room: staff.room,
-  //         role: staff.role
-  //       });
+  const saveScheduleItem = useCallback(async (staffId, index, values) => {
+    console.log('SAVING SCHEDULE');
+    // try {
+    //   const ref = firebaseRef.child(`weeks/${}`);
+    //   if (staff.id) {
+    //     await ref.child(staff.id).update({
+    //       name: staff.name,
+    //       room: staff.room,
+    //       role: staff.role
+    //     });
 
-  //       setStateSchedule((prevState) =>
-  //         prevState.map((oldSchedule) => {
-  //           return oldSchedule.id === staff.id ? staff : oldSchedule;
-  //         })
-  //       );
-  //     } else {
-  //       const res = await ref.push(staff);
-  //       const snapshot = await res.once('value');
-  //       setStateSchedule((prevState) => [
-  //         ...prevState,
-  //         {
-  //           id: snapshot.key,
-  //           ...staff
-  //         }
-  //       ]);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }, []);
+    //     setStateSchedule((prevState) =>
+    //       prevState.map((oldSchedule) => {
+    //         return oldSchedule.id === staff.id ? staff : oldSchedule;
+    //       })
+    //     );
+    //   } else {
+    //     const res = await ref.push(staff);
+    //     const snapshot = await res.once('value');
+    //     setStateSchedule((prevState) => [
+    //       ...prevState,
+    //       {
+    //         id: snapshot.key,
+    //         ...staff
+    //       }
+    //     ]);
+    //   }
+    // } catch (err) {
+    //   console.error(err);
+    // }
+  }, []);
 
-  return <ScheduleTable stateSchedule={stateSchedule}></ScheduleTable>;
+  return <ScheduleTable stateSchedule={stateSchedule} saveScheduleItem={saveScheduleItem}></ScheduleTable>;
 };
 
 export default Schedule;

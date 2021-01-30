@@ -6,17 +6,17 @@ import {
   TableCell,
   TableRow,
   Paper,
-  Button,
   Grid,
   makeStyles,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText
+  Tooltip,
+  IconButton
 } from '@material-ui/core';
 import AccessTimeRoundedIcon from '@material-ui/icons/AccessTimeRounded';
+import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import moment from 'moment';
+import { useState } from 'react';
+import ScheduleTimeDialog from './ScheduleTimeDialog';
 
 const dayHeaders = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
@@ -34,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
     // minWidth: 400
   },
   tableHeaderCellCheckbox: {
-    backgroundColor: '#f4f4f4'
+    backgroundColor: '#f4f4f4',
+    padding: 2
     // width: '10%'
   },
   tableHeaderCell: {
@@ -54,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   tableBodyCell: {
     borderLeft: '1px dotted #aaa',
     borderRight: '1px dotted #aaa',
-    padding: 4,
+    padding: 5,
     minWidth: 100,
     fontSize: 12,
     '&:hover': {
@@ -72,21 +73,51 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ScheduleTable = ({ stateSchedule }) => {
+const ScheduleTable = ({ stateSchedule, saveScheduleItem }) => {
   const classes = useStyles();
+  const [currentRecord, setCurrentRecord] = useState({
+    staffId: '',
+    index: '',
+    times: ''
+  });
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleAddStaffButton = () => {};
+  const handleCellClick = (staffId, index, times) => {
+    setCurrentRecord({
+      staffId,
+      index,
+      times
+    });
+    console.log({
+      staffId,
+      index,
+      times
+    });
+    setDialogOpen(true);
+  };
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
+
   return (
     <>
-      <Button>ddsfd</Button>
       <div style={{ height: '100%', width: '100%' }}>
         <Paper className={classes.paper}>
           <TableContainer>
             <Table className={classes.table} aria-labelledby="tableTitle" size="medium" aria-label="schedule table">
               <TableHead>
                 <TableRow>
-                  <TableCell className={classes.tableHeaderCellCheckbox}></TableCell>
+                  <TableCell align="center" className={classes.tableHeaderCellCheckbox}>
+                    <Tooltip title="Add Staff">
+                      <IconButton onClick={handleAddStaffButton}>
+                        <AddCircleRoundedIcon color="primary" fontSize="large" />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
                   {dayHeaders.map((day) => {
                     return (
-                      <TableCell className={classes.tableHeaderCell} key={day}>
+                      <TableCell align="center" className={classes.tableHeaderCell} key={day}>
                         {day}
                       </TableCell>
                     );
@@ -97,38 +128,21 @@ const ScheduleTable = ({ stateSchedule }) => {
                 {stateSchedule.map((staff) => {
                   return (
                     <TableRow key={staff.id}>
-                      <TableCell onClick={() => console.log('CLICK')} className={classes.tableBodyCellCheckbox}>
-                        {staff.id}
-                      </TableCell>
+                      <TableCell className={classes.tableBodyCellCheckbox}>{staff.id}</TableCell>
                       {staff.time.map((day, index) => {
                         return (
-                          <TableCell className={classes.tableBodyCell} key={staff.id + index}>
-                            {/* <List dense disablePadding>
-                              <ListItem>
-                                <ListItemText
-                                  primary={moment(day[0], 'hh:mm').format('h:mm a')}
-                                  secondary={moment(day[1], 'hh:mm').format('h:mm a')}
-                                />
-                              </ListItem>
-
-                              {day[2] && (
-                                <>
-                                  <ListItem>
-                                    <ListItemText primary={moment(day[2], 'hh:mm').format('h:mm a')} />
-                                  </ListItem>
-                                </>
-                              )}
-                            </List> */}
-
+                          <TableCell
+                            className={classes.tableBodyCell}
+                            key={staff.id + index}
+                            onClick={() => handleCellClick(staff.id, index, day)}
+                          >
                             <Grid container direction="row" justify="space-between" alignItems="center">
                               <Grid item xs={2}>
                                 <AccessTimeRoundedIcon fontSize="small" color="secondary" />
                               </Grid>
                               <Grid item xs={10}>
                                 <Grid container direction="row" justify="center" alignItems="center">
-                                  {moment(day[0], 'hh:mm').format('h:mm a')}
-                                  <br></br>
-                                  {moment(day[1], 'hh:mm').format('h:mm a')}
+                                  {moment(day[0], 'hh:mm').format('h:m0')} - {moment(day[1], 'hh:mm').format('h:mm')}
                                 </Grid>
                               </Grid>
                               {day[2] && (
@@ -138,7 +152,7 @@ const ScheduleTable = ({ stateSchedule }) => {
                                   </Grid>
                                   <Grid item xs={10}>
                                     <Grid container direction="row" justify="center" alignItems="center">
-                                      {moment(day[2], 'hh:mm').format('h:mm a')}
+                                      {moment(day[2], 'hh:mm').format('h:mm')}
                                     </Grid>
                                   </Grid>
                                 </>
@@ -155,6 +169,12 @@ const ScheduleTable = ({ stateSchedule }) => {
           </TableContainer>
         </Paper>
       </div>
+      <ScheduleTimeDialog
+        dialogOpen={dialogOpen}
+        handleCloseDialog={handleCloseDialog}
+        initialData={currentRecord}
+        saveScheduleItem={saveScheduleItem}
+      ></ScheduleTimeDialog>
     </>
   );
 };
