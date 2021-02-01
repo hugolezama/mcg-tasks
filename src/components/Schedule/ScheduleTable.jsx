@@ -78,7 +78,7 @@ const ScheduleTable = ({ stateSchedule, saveScheduleItem }) => {
   const [currentRecord, setCurrentRecord] = useState({
     staffId: '',
     index: '',
-    times: ''
+    times: []
   });
   const [dialogOpen, setDialogOpen] = useState(false);
 

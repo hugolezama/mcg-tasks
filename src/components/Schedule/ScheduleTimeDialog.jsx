@@ -1,103 +1,102 @@
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-import * as yup from 'yup';
-import { Grid, makeStyles, TextField } from '@material-ui/core';
-import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { Grid } from '@material-ui/core';
+import { Field, Formik, Form } from 'formik';
 import React from 'react';
+import { CheckboxWithLabel } from 'formik-material-ui';
+import { KeyboardTimePicker } from 'formik-material-ui-pickers';
+import moment from 'moment';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
 
-const validationSchema = yup.object({
-  startTime: yup.string().required('Start time is required'),
-  endTime: yup.string().required('End time is required'),
-  breakTime: yup.string()
+const scheduleValidation = Yup.object().shape({
+  startTime: Yup.date().required('Start time is required'),
+  endTime: Yup.mixed().required('Start time is required'),
+  breakTime: Yup.date(),
+  hasBreak: Yup.bool()
 });
 
-const useStyles = makeStyles((theme) => ({
-  timePicker: {
-    zIndex: 1500
-  }
-}));
-const ScheduleTimeDialog = React.memo(({ handleSaveTime, dialogOpen, handleCloseDialog, initialData }) => {
-  const classes = useStyles();
-
-  const formik = useFormik({
-    initialValues: {
-      startTime: initialData.times[0],
-      endTime: initialData.times[1],
-      breakTime: initialData.times[2]
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      handleSaveTime(initialData.staffId, initialData.index, values);
-      handleCloseDialog();
-    },
-    enableReinitialize: true
-  });
-
+const ScheduleTimeDialog = React.memo(({ saveScheduleItem, dialogOpen, handleCloseDialog, initialData }) => {
   return (
-    <Dialog
-      open={dialogOpen}
-      disableBackdropClick
-      disableEscapeKeyDown
-      onClose={handleCloseDialog}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">Add New Staff Member</DialogTitle>
-      <div style={{ padding: 20 }}>
-        <form onSubmit={formik.handleSubmit} autoComplete="off" id="staffForm">
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <TextField
-                id="startTime"
-                label="Start time"
-                type="time"
-                defaultValue="07:30"
-                // className={classes.textField}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                inputProps={{
-                  step: 900 // 5 min
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                id="endTime"
-                label="End time"
-                type="time"
-                defaultValue="16:30"
-                // className={classes.textField}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                inputProps={{
-                  step: 900 // 5 min
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}></Grid>
-          </Grid>
-        </form>
-      </div>
-      <div style={{ padding: 20 }}>
-        <Grid container>
-          <Grid item xs={12} container direction="row" alignItems="center" justify="flex-end" spacing={1}>
-            <Grid item>
-              <Button onClick={handleCloseDialog} variant="outlined" color="secondary">
-                Cancel
-              </Button>
-            </Grid>
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <Dialog
+        open={dialogOpen}
+        disableBackdropClick
+        disableEscapeKeyDown
+        onClose={handleCloseDialog}
+        aria-labelledby="form-dialog-title"
+      >
+        <Formik
+          initialValues={{
+            startTime: moment(initialData.times[0], 'hh:mm'),
+            endTime: moment(initialData.times[1], 'hh:mm'),
+            breakTime: moment(initialData.times[2] || '13:00', 'hh:mm'),
+            hasBreak: initialData.times[2] ? true : false
+          }}
+          validationSchema={scheduleValidation}
+          onSubmit={(values) => {
+            console.log(moment(values.startTime).format('hh:mm'));
+            const times = [];
+            times.push(moment(values.startTime).format('hh:mm'));
+            times.push(moment(values.endTime).format('hh:mm'));
+            if (values.hasBreak) {
+              times.push(moment(values.breakTime).format('hh:mm'));
+            }
 
-            <Grid item>
-              <Button color="primary" variant="outlined" type="submit" form="staffForm">
-                Save
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </div>
-    </Dialog>
+            saveScheduleItem(initialData.staffId, initialData.index, times);
+            handleCloseDialog();
+          }}
+        >
+          {({ submitForm, values }) => (
+            <Form>
+              <DialogTitle id="form-dialog-title">Add New Staff Member</DialogTitle>
+              <div style={{ padding: 20 }}>
+                <Grid container spacing={3}>
+                  <Grid item xs={6}>
+                    <Field component={KeyboardTimePicker} label="Start Time" name="startTime" minutesStep={15} />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Field component={KeyboardTimePicker} label="End Time" name="endTime" minutesStep={15} />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Field
+                      component={CheckboxWithLabel}
+                      type="checkbox"
+                      name="hasBreak"
+                      Label={{ label: 'Has break?' }}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    {values.hasBreak && (
+                      <Field component={KeyboardTimePicker} label="Break Time" name="breakTime" minutesStep={15} />
+                    )}
+                  </Grid>
+                </Grid>
+              </div>{' '}
+              <div style={{ padding: 20 }}>
+                <Grid container>
+                  <Grid item xs={12} container direction="row" alignItems="center" justify="flex-end" spacing={1}>
+                    <Grid item>
+                      <Button onClick={handleCloseDialog} variant="outlined" color="secondary">
+                        Cancel
+                      </Button>
+                    </Grid>
+
+                    <Grid item>
+                      <Button color="primary" variant="outlined" type="submit" onClick={submitForm} form="staffForm">
+                        Save
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </Dialog>
+    </MuiPickersUtilsProvider>
   );
 });
 export default ScheduleTimeDialog;

@@ -7,7 +7,7 @@ import ScheduleTable from './ScheduleTable';
 
 const Schedule = () => {
   const [stateSchedule, setStateSchedule] = useState([]);
-  const { startOfWeek } = useContext(WeekContext);
+  const { startOfWeek, setStartOfWeek } = useContext(WeekContext);
 
   useEffect(() => {
     (async () => {
@@ -40,37 +40,27 @@ const Schedule = () => {
     })();
   }, [startOfWeek]);
 
-  const saveScheduleItem = useCallback(async (staffId, index, values) => {
-    console.log('SAVING SCHEDULE');
-    // try {
-    //   const ref = firebaseRef.child(`weeks/${}`);
-    //   if (staff.id) {
-    //     await ref.child(staff.id).update({
-    //       name: staff.name,
-    //       room: staff.room,
-    //       role: staff.role
-    //     });
+  const saveScheduleItem = useCallback(
+    async (staffId, index, values) => {
+      console.log('SAVING SCHEDULE');
+      console.log(startOfWeek.format('MM-DD-YYYY'));
+      console.log(staffId);
+      console.log(index);
+      console.log(values);
+      try {
+        const ref = await firebaseRef.child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/schedule/${staffId}`);
 
-    //     setStateSchedule((prevState) =>
-    //       prevState.map((oldSchedule) => {
-    //         return oldSchedule.id === staff.id ? staff : oldSchedule;
-    //       })
-    //     );
-    //   } else {
-    //     const res = await ref.push(staff);
-    //     const snapshot = await res.once('value');
-    //     setStateSchedule((prevState) => [
-    //       ...prevState,
-    //       {
-    //         id: snapshot.key,
-    //         ...staff
-    //       }
-    //     ]);
-    //   }
-    // } catch (err) {
-    //   console.error(err);
-    // }
-  }, []);
+        await ref.child(index).update({
+          time: values
+        });
+
+        setStartOfWeek(startOfWeek);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    [startOfWeek]
+  );
 
   return <ScheduleTable stateSchedule={stateSchedule} saveScheduleItem={saveScheduleItem}></ScheduleTable>;
 };
