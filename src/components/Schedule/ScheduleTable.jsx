@@ -16,6 +16,7 @@ import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import moment from 'moment';
 import { useState } from 'react';
+import AddStaffScheduleDialog from './AddStaffScheduleDialog';
 import ScheduleTimeDialog from './ScheduleTimeDialog';
 
 const dayHeaders = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -73,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ScheduleTable = ({ stateSchedule, saveScheduleItem }) => {
+const ScheduleTable = ({ stateSchedule, saveScheduleItem, addStaffSchedule }) => {
   const classes = useStyles();
   const [currentRecord, setCurrentRecord] = useState({
     staffId: '',
@@ -81,8 +82,8 @@ const ScheduleTable = ({ stateSchedule, saveScheduleItem }) => {
     times: []
   });
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [staffDialogOpen, setStaffDialogOpen] = useState(false);
 
-  const handleAddStaffButton = () => {};
   const handleCellClick = (staffId, index, times, dayOff) => {
     setCurrentRecord({
       staffId,
@@ -96,6 +97,10 @@ const ScheduleTable = ({ stateSchedule, saveScheduleItem }) => {
     setDialogOpen(false);
   };
 
+  const handleCloseStaffDialog = () => {
+    setStaffDialogOpen(false);
+  };
+
   return (
     <>
       <div style={{ height: '100%', width: '100%' }}>
@@ -106,7 +111,7 @@ const ScheduleTable = ({ stateSchedule, saveScheduleItem }) => {
                 <TableRow>
                   <TableCell align="center" className={classes.tableHeaderCellCheckbox}>
                     <Tooltip title="Add Staff">
-                      <IconButton onClick={handleAddStaffButton}>
+                      <IconButton onClick={() => setStaffDialogOpen(true)}>
                         <AddCircleRoundedIcon color="primary" fontSize="large" />
                       </IconButton>
                     </Tooltip>
@@ -184,6 +189,13 @@ const ScheduleTable = ({ stateSchedule, saveScheduleItem }) => {
         initialData={currentRecord}
         saveScheduleItem={saveScheduleItem}
       ></ScheduleTimeDialog>
+
+      <AddStaffScheduleDialog
+        dialogOpen={staffDialogOpen}
+        stateSchedule={stateSchedule}
+        handleCloseDialog={handleCloseStaffDialog}
+        addStaffSchedule={addStaffSchedule}
+      ></AddStaffScheduleDialog>
     </>
   );
 };

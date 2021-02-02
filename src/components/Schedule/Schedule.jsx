@@ -16,7 +16,7 @@ const Schedule = () => {
           .child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/schedule`)
           .once('value');
         const data = scheduleSnap.val();
-        console.log(data);
+
         setStateSchedule(data || {});
       } catch (err) {
         console.error(err);
@@ -25,11 +25,6 @@ const Schedule = () => {
   }, [startOfWeek]);
 
   const saveScheduleItem = async (staffId, index, values, dayOff) => {
-    console.log('SAVING SCHEDULE');
-    console.log(startOfWeek.format('MM-DD-YYYY'));
-    console.log(staffId);
-    console.log(index);
-    console.log(values);
     try {
       const ref = await firebaseRef.child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/schedule/${staffId}`);
 
@@ -39,7 +34,7 @@ const Schedule = () => {
       });
 
       let prevSched = Object.assign(stateSchedule);
-      console.log(prevSched);
+
       prevSched[staffId][index].time = [];
       prevSched[staffId][index].dayOff = dayOff;
 
@@ -49,14 +44,50 @@ const Schedule = () => {
         });
       }
 
-      console.log(prevSched);
       setStateSchedule(prevSched);
     } catch (err) {
       console.error(err);
     }
   };
 
-  return <ScheduleTable stateSchedule={stateSchedule} saveScheduleItem={saveScheduleItem}></ScheduleTable>;
+  const addStaffSchedule = async (staffId) => {
+    try {
+      const ref = await firebaseRef.child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/schedule/${staffId}`);
+
+      const defaultDay = {
+        dayOff: false,
+        time: {
+          0: '07:00',
+          1: '16:00',
+          2: '13:00'
+        }
+      };
+      const defaultSched = {
+        0: defaultDay,
+        1: defaultDay,
+        2: defaultDay,
+        3: defaultDay,
+        4: defaultDay
+      };
+      await ref.set(defaultSched);
+      setStateSchedule((prev) => {
+        return {
+          ...prev,
+          [staffId]: defaultSched
+        };
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
+    <ScheduleTable
+      stateSchedule={stateSchedule}
+      saveScheduleItem={saveScheduleItem}
+      addStaffSchedule={addStaffSchedule}
+    ></ScheduleTable>
+  );
 };
 
 export default Schedule;
