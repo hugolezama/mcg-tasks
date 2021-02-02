@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 
 import { WeekContext } from '../../contexts/WeekContext';
@@ -6,8 +6,8 @@ import firebaseRef from '../../firebase/firebaseConfig';
 import ScheduleTable from './ScheduleTable';
 
 const Schedule = () => {
-  const [stateSchedule, setStateSchedule] = useState([]);
-  const { startOfWeek, setStartOfWeek } = useContext(WeekContext);
+  const [stateSchedule, setStateSchedule] = useState({});
+  const { startOfWeek } = useContext(WeekContext);
 
   useEffect(() => {
     (async () => {
@@ -16,51 +16,45 @@ const Schedule = () => {
           .child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/schedule`)
           .once('value');
         const data = scheduleSnap.val();
-        const loadedData = [];
         console.log(data);
-        for (const key in data) {
-          const days = [];
-          for (const key2 in data[key]) {
-            const hours = [];
-            for (const key3 in data[key][key2].time) {
-              hours.push(data[key][key2].time[key3]);
-            }
-            days.push(hours);
-          }
-          loadedData.push({
-            id: key,
-            time: days
-          });
-        }
-        console.log(loadedData);
-        setStateSchedule(loadedData);
+        setStateSchedule(data || {});
       } catch (err) {
         console.error(err);
       }
     })();
   }, [startOfWeek]);
 
-  const saveScheduleItem = useCallback(
-    async (staffId, index, values) => {
-      console.log('SAVING SCHEDULE');
-      console.log(startOfWeek.format('MM-DD-YYYY'));
-      console.log(staffId);
-      console.log(index);
-      console.log(values);
-      try {
-        const ref = await firebaseRef.child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/schedule/${staffId}`);
+  const saveScheduleItem = async (staffId, index, values, dayOff) => {
+    console.log('SAVING SCHEDULE');
+    console.log(startOfWeek.format('MM-DD-YYYY'));
+    console.log(staffId);
+    console.log(index);
+    console.log(values);
+    try {
+      const ref = await firebaseRef.child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/schedule/${staffId}`);
 
-        await ref.child(index).update({
-          time: values
+      await ref.child(index).update({
+        time: values,
+        dayOff
+      });
+
+      let prevSched = Object.assign(stateSchedule);
+      console.log(prevSched);
+      prevSched[staffId][index].time = [];
+      prevSched[staffId][index].dayOff = dayOff;
+
+      if (!dayOff) {
+        values.forEach((timeValue) => {
+          prevSched[staffId][index].time.push(timeValue);
         });
-
-        setStartOfWeek(startOfWeek);
-      } catch (err) {
-        console.error(err);
       }
-    },
-    [startOfWeek]
-  );
+
+      console.log(prevSched);
+      setStateSchedule(prevSched);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return <ScheduleTable stateSchedule={stateSchedule} saveScheduleItem={saveScheduleItem}></ScheduleTable>;
 };

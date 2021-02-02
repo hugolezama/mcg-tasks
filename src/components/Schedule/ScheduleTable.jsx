@@ -74,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ScheduleTable = ({ stateSchedule, saveScheduleItem }) => {
+  console.log('SCHEDULE TABLE!');
   const classes = useStyles();
   const [currentRecord, setCurrentRecord] = useState({
     staffId: '',
@@ -83,16 +84,12 @@ const ScheduleTable = ({ stateSchedule, saveScheduleItem }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleAddStaffButton = () => {};
-  const handleCellClick = (staffId, index, times) => {
+  const handleCellClick = (staffId, index, times, dayOff) => {
     setCurrentRecord({
       staffId,
       index,
-      times
-    });
-    console.log({
-      staffId,
-      index,
-      times
+      times,
+      dayOff
     });
     setDialogOpen(true);
   };
@@ -125,39 +122,52 @@ const ScheduleTable = ({ stateSchedule, saveScheduleItem }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {stateSchedule.map((staff) => {
+                {Object.keys(stateSchedule).map((key) => {
+                  const staff = stateSchedule[key];
                   return (
-                    <TableRow key={staff.id}>
-                      <TableCell className={classes.tableBodyCellCheckbox}>{staff.id}</TableCell>
-                      {staff.time.map((day, index) => {
+                    <TableRow key={key}>
+                      <TableCell className={classes.tableBodyCellCheckbox}>{key}</TableCell>
+                      {Object.keys(staff).map((dayKey) => {
+                        const day = staff[dayKey];
                         return (
                           <TableCell
                             className={classes.tableBodyCell}
-                            key={staff.id + index}
-                            onClick={() => handleCellClick(staff.id, index, day)}
+                            key={key + dayKey}
+                            onClick={() => handleCellClick(key, dayKey, day.time, day.dayOff)}
                           >
-                            <Grid container direction="row" justify="space-between" alignItems="center">
-                              <Grid item xs={2}>
-                                <AccessTimeRoundedIcon fontSize="small" color="secondary" />
-                              </Grid>
-                              <Grid item xs={10}>
-                                <Grid container direction="row" justify="center" alignItems="center">
-                                  {moment(day[0], 'hh:mm').format('h:m0')} - {moment(day[1], 'hh:mm').format('h:mm')}
+                            {day.dayOff && (
+                              <Grid container direction="row">
+                                <Grid item xs={12} align="center">
+                                  Day Off
                                 </Grid>
                               </Grid>
-                              {day[2] && (
-                                <>
-                                  <Grid item xs={2}>
-                                    <FastfoodIcon fontSize="small" color="secondary" />
+                            )}
+                            {!day.dayOff && (
+                              <Grid container direction="row" justify="space-between" alignItems="center">
+                                <Grid item xs={2}>
+                                  <AccessTimeRoundedIcon fontSize="small" color="secondary" />
+                                </Grid>
+                                <Grid item xs={10}>
+                                  <Grid container direction="row" justify="center" alignItems="center">
+                                    {moment(day.time[0], 'hh:mm').format('h:mm')}
+                                    {' - '}
+                                    {moment(day.time[1], 'hh:mm').format('h:mm')}
                                   </Grid>
-                                  <Grid item xs={10}>
-                                    <Grid container direction="row" justify="center" alignItems="center">
-                                      {moment(day[2], 'hh:mm').format('h:mm')}
+                                </Grid>
+                                {day.time[2] && (
+                                  <>
+                                    <Grid item xs={2}>
+                                      <FastfoodIcon fontSize="small" color="secondary" />
                                     </Grid>
-                                  </Grid>
-                                </>
-                              )}
-                            </Grid>
+                                    <Grid item xs={10}>
+                                      <Grid container direction="row" justify="center" alignItems="center">
+                                        {moment(day.time[2], 'hh:mm').format('h:mm')}
+                                      </Grid>
+                                    </Grid>
+                                  </>
+                                )}
+                              </Grid>
+                            )}
                           </TableCell>
                         );
                       })}
