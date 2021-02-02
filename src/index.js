@@ -6,13 +6,16 @@ import theme from './theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { WeekProvider } from './contexts/WeekContext';
+import { StaffProvider } from './contexts/StaffContext';
 
 ReactDOM.render(
   // <React.StrictMode>
   <ThemeProvider theme={theme}>
     <Router>
       <WeekProvider>
-        <App />
+        <StaffProvider>
+          <App />
+        </StaffProvider>
       </WeekProvider>
     </Router>
   </ThemeProvider>,

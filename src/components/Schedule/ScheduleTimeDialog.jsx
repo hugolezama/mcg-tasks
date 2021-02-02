@@ -25,7 +25,8 @@ const ScheduleTimeDialog = React.memo(({ saveScheduleItem, dialogOpen, handleClo
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <Dialog
         open={dialogOpen}
-        fullWidth={'sm'}
+        fullWidth={true}
+        maxWidth={'sm'}
         disableBackdropClick
         disableEscapeKeyDown
         onClose={handleCloseDialog}

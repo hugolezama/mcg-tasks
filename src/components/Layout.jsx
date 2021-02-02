@@ -101,7 +101,7 @@ export default function Layout(props) {
   const history = useHistory();
   const [open, setOpen] = useState(true);
 
-  const { startOfWeek, setStartOfWeek, currentWeek, setCurrentWeek } = useContext(WeekContext);
+  const { startOfWeek, setStartOfWeek, currentWeek } = useContext(WeekContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -114,13 +114,11 @@ export default function Layout(props) {
   const nextWeek = () => {
     const nextWeek = moment(startOfWeek).add(1, 'week');
     setStartOfWeek(nextWeek);
-    // setCurrentWeek(nextWeek.format('MM/DD/YYYY') + ' - ' + moment(nextWeek).add(5, 'days').format('MM/DD/YYYY'));
   };
 
   const prevWeek = () => {
     const prevWeek = moment(startOfWeek).subtract(1, 'week');
     setStartOfWeek(prevWeek);
-    // setCurrentWeek(prevWeek.format('MM/DD/YYYY') + ' - ' + moment(prevWeek).add(5, 'days').format('MM/DD/YYYY'));
   };
 
   return (

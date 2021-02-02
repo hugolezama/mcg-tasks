@@ -22,8 +22,8 @@ const StaffDialog = React.memo(({ handleSaveStaff, dialogOpen, handleCloseDialog
   const formik = useFormik({
     initialValues: initialData,
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      handleSaveStaff(values);
+    onSubmit: async (values) => {
+      await handleSaveStaff(values);
       handleCloseDialog();
     },
     enableReinitialize: true

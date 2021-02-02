@@ -1,77 +1,89 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import ListStaff from './ListStaff';
 import firebaseRef from '../../firebase/firebaseConfig';
+import { StaffContext } from '../../contexts/StaffContext';
 
 const Staff = () => {
-  const [stateStaff, setStateStaff] = useState([]);
+  const { stateStaff, setStateStaff } = useContext(StaffContext);
+
+  const [arrayStaff, setArrayStaff] = useState([]);
 
   useEffect(() => {
-    (async () => {
+    console.log('USE EFFFECT');
+    const loadedStaff = [];
+    for (const key in stateStaff) {
+      loadedStaff.push({
+        id: key,
+        name: stateStaff[key].name,
+        room: stateStaff[key].room,
+        role: stateStaff[key].role
+      });
+    }
+    setArrayStaff(loadedStaff);
+  }, [stateStaff, setStateStaff]);
+
+  const saveStaffHandler = useCallback(
+    async (staff) => {
       try {
-        const staffSnap = await firebaseRef.child('staff').once('value');
-        const data = staffSnap.val();
-        const loadedStaff = [];
-        for (const key in data) {
-          loadedStaff.push({
-            id: key,
-            name: data[key].name,
-            room: data[key].room,
-            role: data[key].role
+        const ref = firebaseRef.child('staff');
+        if (staff.id) {
+          await ref.child(staff.id).update({
+            name: staff.name,
+            room: staff.room,
+            role: staff.role
+          });
+
+          setStateStaff((prev) => {
+            return {
+              ...prev,
+              [staff.id]: {
+                name: staff.name,
+                room: staff.room,
+                role: staff.role
+              }
+            };
+          });
+        } else {
+          const res = await ref.push(staff);
+          const snapshot = await res.once('value');
+
+          setStateStaff((prev) => {
+            return {
+              ...prev,
+              [snapshot.key]: {
+                ...staff
+              }
+            };
           });
         }
-        setStateStaff(loadedStaff);
       } catch (err) {
         console.error(err);
       }
-    })();
-  }, []);
+    },
+    [setStateStaff]
+  );
 
-  const saveStaffHandler = useCallback(async (staff) => {
-    console.log('SAVING STAFF');
-    try {
-      const ref = firebaseRef.child('staff');
-      if (staff.id) {
-        await ref.child(staff.id).update({
-          name: staff.name,
-          room: staff.room,
-          role: staff.role
-        });
+  const removeStaffHandler = useCallback(
+    (staffId) => {
+      const ref = firebaseRef.child('/staff');
+      ref
+        .child(staffId)
+        .remove()
+        .then((res) => console.log(res))
+        .catch((err) => console.error(err));
 
-        setStateStaff((prevState) =>
-          prevState.map((oldStaff) => {
-            return oldStaff.id === staff.id ? staff : oldStaff;
-          })
-        );
-      } else {
-        const res = await ref.push(staff);
-        const snapshot = await res.once('value');
-        setStateStaff((prevState) => [
-          ...prevState,
-          {
-            id: snapshot.key,
-            ...staff
-          }
-        ]);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, []);
-
-  const removeStaffHandler = useCallback((staffId) => {
-    console.log('REMOVING STAFF');
-    const ref = firebaseRef.child('/staff');
-    ref
-      .child(staffId)
-      .remove()
-      .then((res) => console.log(res))
-      .catch((err) => console.error(err));
-    setStateStaff((prevState) => prevState.filter((oldStaff) => oldStaff.id !== staffId));
-  }, []);
+      setStateStaff((prev) => {
+        const newObject = { ...prev };
+        delete newObject[staffId];
+        return newObject;
+      });
+    },
+    [setStateStaff]
+  );
 
   return (
     <ListStaff
-      staffList={stateStaff}
+      staffList={arrayStaff}
       handleSaveStaff={saveStaffHandler}
       handleRemoveStaff={removeStaffHandler}
     ></ListStaff>

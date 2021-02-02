@@ -74,7 +74,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ScheduleTable = ({ stateSchedule, saveScheduleItem }) => {
-  console.log('SCHEDULE TABLE!');
   const classes = useStyles();
   const [currentRecord, setCurrentRecord] = useState({
     staffId: '',
