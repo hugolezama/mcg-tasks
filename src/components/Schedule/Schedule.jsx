@@ -27,14 +27,12 @@ const Schedule = () => {
   const saveScheduleItem = async (staffId, index, values, dayOff) => {
     try {
       const ref = await firebaseRef.child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/schedule/${staffId}`);
-
       await ref.child(index).update({
         time: values,
         dayOff
       });
 
       let prevSched = Object.assign(stateSchedule);
-
       prevSched[staffId][index].time = [];
       prevSched[staffId][index].dayOff = dayOff;
 
