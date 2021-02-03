@@ -195,13 +195,12 @@ const TasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
         initialData={currentRecord}
         assignTask={assignTask}
       ></AssignTaskDialog>
-      {/*
+
       <CreateTaskDialog
         dialogOpen={taskDialogOpen}
-        stateTasks={stateTasks}
-        handleCloseDialog={handleCloseStaffDialog}
+        handleCloseDialog={handleCloseTaskDialog}
         addTaskRow={addTaskRow}
-      ></CreateTaskDialog> */}
+      ></CreateTaskDialog>
     </>
   );
 };

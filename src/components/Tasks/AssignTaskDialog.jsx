@@ -87,7 +87,7 @@ const AssignTaskDialog = memo(({ assignTask, dialogOpen, handleCloseDialog, init
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <FormControl className={classes.formControl} fullWidth>
-              <InputLabel id="demo-mutiple-chip-label">Chip</InputLabel>
+              <InputLabel id="demo-mutiple-chip-label">Task assignees</InputLabel>
               <Select
                 labelId="demo-mutiple-chip-label"
                 id="demo-mutiple-chip"
