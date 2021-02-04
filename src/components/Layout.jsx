@@ -19,7 +19,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import PeopleAltRoundedIcon from '@material-ui/icons/PeopleAltRounded';
 import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
 import AssignmentTurnedInRoundedIcon from '@material-ui/icons/AssignmentTurnedInRounded';
-import { Box, Container, Paper } from '@material-ui/core';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import { Box, Container, Paper, Tooltip } from '@material-ui/core';
 
 import moment from 'moment';
 import { WeekContext } from '../contexts/WeekContext';
@@ -187,26 +188,35 @@ export default function Layout(props) {
         </div>
 
         <List>
-          <ListItem button key="Schedule" onClick={() => history.push('/schedule')}>
+          <ListItem button key="Schedule" onClick={() => history.push('/schedule')} dense>
             <ListItemIcon>
               <EventNoteRoundedIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Schedule" />
           </ListItem>
           <Divider variant="middle" />
-          <ListItem button key="Staff" onClick={() => history.push('/staff')}>
+          <ListItem button key="Staff" onClick={() => history.push('/staff')} dense>
             <ListItemIcon>
               <PeopleAltRoundedIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Staff" />
           </ListItem>
           <Divider variant="middle" />
-          <ListItem button key="Tasks" onClick={() => history.push('/tasks')}>
+          <ListItem button key="Tasks" onClick={() => history.push('/tasks')} dense>
             <ListItemIcon>
-              <AssignmentTurnedInRoundedIcon color="secondary" />
+              <AssignmentIndIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Tasks" />
           </ListItem>
+          <Divider variant="middle" />
+          <Tooltip title="Room Tasks">
+            <ListItem button key="RoomTasks" onClick={() => history.push('/room-tasks')} dense>
+              <ListItemIcon>
+                <AssignmentTurnedInRoundedIcon color="secondary" />
+              </ListItemIcon>
+              <ListItemText primary="Room Tasks" />
+            </ListItem>
+          </Tooltip>
         </List>
       </Drawer>
 

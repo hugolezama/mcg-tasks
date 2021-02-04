@@ -21,22 +21,15 @@ const Tasks = () => {
     })();
   }, [startOfWeek]);
 
-  const addTaskRow = useCallback(
-    async (taskName) => {
-      const newTaskRow = { 0: [], 1: [], 2: [], 3: [], 4: [] };
-
-      const ref = await firebaseRef.child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/tasks`);
-      await ref.child(taskName).set(newTaskRow);
-
-      setStateTasks((prev) => {
-        return {
-          ...prev,
-          [taskName]: newTaskRow
-        };
-      });
-    },
-    [startOfWeek]
-  );
+  const addTaskRow = useCallback((taskName) => {
+    const newTaskRow = { taskName: { 0: [], 1: [], 2: [], 3: [], 4: [] } };
+    setStateTasks((prev) => {
+      return {
+        ...prev,
+        [taskName]: newTaskRow
+      };
+    });
+  }, []);
   const assignTask = useCallback(
     async (taskName, weekDay, assignees) => {
       try {

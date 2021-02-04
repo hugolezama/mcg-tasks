@@ -12,7 +12,6 @@ import {
   IconButton,
   Chip
 } from '@material-ui/core';
-
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 
 import { useState } from 'react';
@@ -20,6 +19,7 @@ import AssignTaskDialog from './AssignTaskDialog';
 import CreateTaskDialog from './CreateTaskDialog';
 
 const dayHeaders = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const dayKeysArray = [0, 1, 2, 3, 4];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -150,8 +150,8 @@ const TasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
                   return (
                     <TableRow key={taskNameKey}>
                       <TableCell className={classes.tableBodyCellCheckbox}>{taskNameKey}</TableCell>
-                      {Object.keys(task).map((dayKey) => {
-                        const day = task[dayKey];
+                      {dayKeysArray.map((dayKey) => {
+                        const day = task[dayKey] || [];
                         return (
                           <TableCell
                             className={classes.tableBodyCell}
