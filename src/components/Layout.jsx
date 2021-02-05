@@ -19,7 +19,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import PeopleAltRoundedIcon from '@material-ui/icons/PeopleAltRounded';
 import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import AssignmentTurnedInRoundedIcon from '@material-ui/icons/AssignmentTurnedInRounded';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 import AssignmentIcon from '@material-ui/icons/Assignment';

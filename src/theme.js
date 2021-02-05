@@ -1,4 +1,4 @@
-import { green, purple, red } from '@material-ui/core/colors';
+import { red } from '@material-ui/core/colors';
 import { createMuiTheme, darken, lighten } from '@material-ui/core/styles';
 
 // A custom theme for this app
