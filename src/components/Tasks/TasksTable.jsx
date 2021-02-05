@@ -9,8 +9,7 @@ import {
   Grid,
   makeStyles,
   Tooltip,
-  IconButton,
-  Chip
+  IconButton
 } from '@material-ui/core';
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 
@@ -30,14 +29,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: '100%'
   },
-  table: {
-    // tableLayout: 'fixed',
-    // minWidth: 400
-  },
+
   tableHeaderCellCheckbox: {
     backgroundColor: '#f4f4f4',
     padding: 2
-    // width: '10%'
   },
   tableHeaderCell: {
     borderLeft: '1px dotted #aaa',

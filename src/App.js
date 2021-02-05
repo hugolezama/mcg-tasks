@@ -5,6 +5,7 @@ import Tasks from './components/Tasks/Tasks';
 import Schedule from './components/Schedule/Schedule';
 import Staff from './components/Staff/Staff';
 import RoomTasks from './components/RoomTasks/RoomTasks';
+import MyWeek from './components/MyWeek/MyWeek';
 
 const App = () => {
   return (
@@ -15,6 +16,9 @@ const App = () => {
         </Route>
         <Route path="/schedule">
           <Schedule />
+        </Route>
+        <Route path="/my-week">
+          <MyWeek />
         </Route>
         <Route path="/tasks">
           <Tasks />

@@ -10,13 +10,12 @@ const RoomTasks = () => {
 
   useEffect(() => {
     (async () => {
-      console.log('effffffffffffff');
       try {
         const snap = await firebaseRef
           .child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/roomTasks`)
           .once('value');
         const data = snap.val();
-        console.log(data);
+
         setStateTasks(data || {});
       } catch (err) {
         console.error(err);

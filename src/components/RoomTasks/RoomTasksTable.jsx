@@ -9,8 +9,7 @@ import {
   Grid,
   makeStyles,
   Tooltip,
-  IconButton,
-  Chip
+  IconButton
 } from '@material-ui/core';
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 
@@ -74,7 +73,9 @@ const useStyles = makeStyles((theme) => ({
       cursor: 'pointer'
     }
   },
-
+  lastRoomRow: {
+    borderBottom: '3px dotted #aaa'
+  },
   chip: {
     margin: theme.spacing(0.2),
     fontSize: 11,
@@ -153,10 +154,13 @@ const RoomTasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
               <TableBody>
                 {Object.keys(stateTasks).map((taskNameKey) => {
                   const task = stateTasks[taskNameKey];
-                  return roomKeys.map((roomName) => {
+                  return roomKeys.map((roomName, roomIndx) => {
                     const room = task[roomName] || [];
                     return (
-                      <TableRow key={taskNameKey + roomName}>
+                      <TableRow
+                        key={taskNameKey + roomName}
+                        className={roomIndx === roomKeys.length - 1 ? classes.lastRoomRow : ''}
+                      >
                         <TableCell className={classes[roomName]} align="center">
                           {taskNameKey}
                         </TableCell>

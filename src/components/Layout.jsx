@@ -18,9 +18,12 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import PeopleAltRoundedIcon from '@material-ui/icons/PeopleAltRounded';
 import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import AssignmentTurnedInRoundedIcon from '@material-ui/icons/AssignmentTurnedInRounded';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import { Box, Container, Paper, Tooltip } from '@material-ui/core';
+
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import { Box, Container, Paper, Tooltip, Zoom } from '@material-ui/core';
 
 import moment from 'moment';
 import { WeekContext } from '../contexts/WeekContext';
@@ -143,11 +146,10 @@ export default function Layout(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Box display={{ xs: 'none', md: 'inline-block' }}>
-            <Typography variant="h5" noWrap>
-              Montessori Children's Garden Scheduler
-            </Typography>
-          </Box>
+
+          <Typography variant="h5" noWrap>
+            Montessori Children's Garden Scheduler
+          </Typography>
 
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
@@ -188,31 +190,47 @@ export default function Layout(props) {
         </div>
 
         <List>
-          <ListItem button key="Schedule" onClick={() => history.push('/schedule')} dense>
-            <ListItemIcon>
-              <EventNoteRoundedIcon color="secondary" />
-            </ListItemIcon>
-            <ListItemText primary="Schedule" />
-          </ListItem>
+          <Tooltip title={open ? '' : 'My Week'} placement="right" TransitionComponent={Zoom}>
+            <ListItem button key="MyWeek" onClick={() => history.push('/my-week')} dense>
+              <ListItemIcon>
+                <EventNoteRoundedIcon color="secondary" />
+              </ListItemIcon>
+              <ListItemText primary="My Week" />
+            </ListItem>
+          </Tooltip>
           <Divider variant="middle" />
-          <ListItem button key="Staff" onClick={() => history.push('/staff')} dense>
-            <ListItemIcon>
-              <PeopleAltRoundedIcon color="secondary" />
-            </ListItemIcon>
-            <ListItemText primary="Staff" />
-          </ListItem>
+          <Tooltip title={open ? '' : 'Schedule'} placement="right" TransitionComponent={Zoom}>
+            <ListItem button key="Schedule" onClick={() => history.push('/schedule')} dense>
+              <ListItemIcon>
+                <AccessTimeIcon color="secondary" />
+              </ListItemIcon>
+              <ListItemText primary="Schedule" />
+            </ListItem>
+          </Tooltip>
+
           <Divider variant="middle" />
-          <ListItem button key="Tasks" onClick={() => history.push('/tasks')} dense>
-            <ListItemIcon>
-              <AssignmentIndIcon color="secondary" />
-            </ListItemIcon>
-            <ListItemText primary="Tasks" />
-          </ListItem>
+          <Tooltip title={open ? '' : 'Staff'} placement="right" TransitionComponent={Zoom}>
+            <ListItem button key="Staff" onClick={() => history.push('/staff')} dense>
+              <ListItemIcon>
+                <PeopleAltRoundedIcon color="secondary" />
+              </ListItemIcon>
+              <ListItemText primary="Staff" />
+            </ListItem>
+          </Tooltip>
           <Divider variant="middle" />
-          <Tooltip title="Room Tasks">
+          <Tooltip title={open ? '' : 'Tasks'} placement="right" TransitionComponent={Zoom}>
+            <ListItem button key="Tasks" onClick={() => history.push('/tasks')} dense>
+              <ListItemIcon>
+                <AssignmentIndIcon color="secondary" />
+              </ListItemIcon>
+              <ListItemText primary="Tasks" />
+            </ListItem>
+          </Tooltip>
+          <Divider variant="middle" />
+          <Tooltip title={open ? '' : 'Room Tasks'} placement="right" TransitionComponent={Zoom}>
             <ListItem button key="RoomTasks" onClick={() => history.push('/room-tasks')} dense>
               <ListItemIcon>
-                <AssignmentTurnedInRoundedIcon color="secondary" />
+                <AssignmentIcon color="secondary" />
               </ListItemIcon>
               <ListItemText primary="Room Tasks" />
             </ListItem>
