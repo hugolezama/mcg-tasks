@@ -66,7 +66,7 @@ const AssignTaskDialog = memo(({ assignTask, dialogOpen, handleCloseDialog, init
   };
 
   const handleSubmit = async () => {
-    await assignTask(initialData.taskName, initialData.weekDay, assignees);
+    await assignTask(initialData.taskName, initialData.weekDay, assignees, initialData.room);
     handleCloseDialog();
   };
   return (
@@ -80,7 +80,8 @@ const AssignTaskDialog = memo(({ assignTask, dialogOpen, handleCloseDialog, init
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        {initialData.taskName} - {days[initialData.weekDay]}
+        {initialData.taskName} - {initialData.room ? initialData.room + ' - ' : ''}
+        {days[initialData.weekDay]}
       </DialogTitle>
 
       <div style={{ padding: 20 }}>

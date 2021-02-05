@@ -13,7 +13,6 @@ const CreateTaskDialog = React.memo(({ dialogOpen, handleCloseDialog, addTaskRow
   };
 
   const handleSubmit = async () => {
-    console.log(taskName);
     await addTaskRow(taskName);
     handleCloseDialog();
   };

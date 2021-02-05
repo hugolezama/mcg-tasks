@@ -22,7 +22,7 @@ const Tasks = () => {
   }, [startOfWeek]);
 
   const addTaskRow = useCallback((taskName) => {
-    const newTaskRow = { taskName: { 0: [], 1: [], 2: [], 3: [], 4: [] } };
+    const newTaskRow = { 0: [], 1: [], 2: [], 3: [], 4: [] };
     setStateTasks((prev) => {
       return {
         ...prev,

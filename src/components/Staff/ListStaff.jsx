@@ -63,6 +63,23 @@ const useStyles = makeStyles((theme) => ({
   },
   tableCellCheck: {
     width: 80
+  },
+
+  Purple: {
+    backgroundColor: '#b19cd9',
+    boxShadow: '5px 5px 10px grey'
+  },
+  Blue: {
+    backgroundColor: '#86d8f7',
+    boxShadow: '5px 5px 10px grey'
+  },
+  Yellow: {
+    backgroundColor: '#fdfd96',
+    boxShadow: '5px 5px 10px grey'
+  },
+  Red: {
+    backgroundColor: '#ff6961',
+    boxShadow: '5px 5px 10px grey'
   }
 }));
 
@@ -141,13 +158,7 @@ export default function ListStaff({ staffList, handleSaveStaff, handleRemoveStaf
                         {row.name}
                       </TableCell>
                       <TableCell>
-                        <Chip
-                          style={{
-                            backgroundColor: row.room,
-                            filter: 'brightness(0.95)',
-                            boxShadow: '5px 5px 10px grey'
-                          }}
-                        />
+                        <Chip className={classes[row.room]} />
                       </TableCell>
                       <TableCell>{row.role}</TableCell>
                     </TableRow>

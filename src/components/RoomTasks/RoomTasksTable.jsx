@@ -15,11 +15,12 @@ import {
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 
 import { useState } from 'react';
-import AssignTaskDialog from './AssignTaskDialog';
-import CreateTaskDialog from './CreateTaskDialog';
+import AssignTaskDialog from '../Tasks/AssignTaskDialog';
+import CreateTaskDialog from '../Tasks/CreateTaskDialog';
 
 const dayHeaders = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-const dayKeysArray = [0, 1, 2, 3, 4];
+const dayKeys = [0, 1, 2, 3, 4];
+const roomKeys = ['Blue', 'Purple', 'Red', 'Yellow'];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,9 +31,21 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: '100%'
   },
-  table: {
-    // tableLayout: 'fixed',
-    // minWidth: 400
+  Purple: {
+    backgroundColor: '#b19cd9',
+    fontWeight: 'bold'
+  },
+  Blue: {
+    backgroundColor: '#86d8f7',
+    fontWeight: 'bold'
+  },
+  Yellow: {
+    backgroundColor: '#fdfd96',
+    fontWeight: 'bold'
+  },
+  Red: {
+    backgroundColor: '#ff817b',
+    fontWeight: 'bold'
   },
   tableHeaderCellCheckbox: {
     backgroundColor: '#f4f4f4',
@@ -50,10 +63,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
     fontSize: 14
   },
-  tableBodyCellCheckbox: {
-    backgroundColor: '#f4f4f4',
-    fontWeight: 'bold'
-  },
   tableBodyCell: {
     borderLeft: '1px dotted #aaa',
     borderRight: '1px dotted #aaa',
@@ -65,14 +74,7 @@ const useStyles = makeStyles((theme) => ({
       cursor: 'pointer'
     }
   },
-  timeCard: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    backgroundColor: 'blue',
-    height: '100%',
-    width: '100%'
-  },
+
   chip: {
     margin: theme.spacing(0.2),
     fontSize: 11,
@@ -95,20 +97,22 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const TasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
+const RoomTasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
   const classes = useStyles();
   const [currentRecord, setCurrentRecord] = useState({
     taskName: '',
     weekDay: '',
+    room: '',
     assignees: []
   });
   const [dialogOpen, setDialogOpen] = useState(false);
   const [taskDialogOpen, setTaskDialogOpen] = useState(false);
 
-  const handleCellClick = (taskName, weekDay, assignees) => {
+  const handleCellClick = (taskName, room, weekDay, assignees) => {
     setCurrentRecord({
       taskName,
       weekDay,
+      room,
       assignees
     });
     setDialogOpen(true);
@@ -126,7 +130,7 @@ const TasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
       <div style={{ height: '100%', width: '100%' }}>
         <Paper className={classes.paper}>
           <TableContainer>
-            <Table className={classes.table} aria-labelledby="tableTitle" size="medium" aria-label="schedule table">
+            <Table className={classes.table} size="small">
               <TableHead>
                 <TableRow>
                   <TableCell align="center" className={classes.tableHeaderCellCheckbox}>
@@ -136,6 +140,7 @@ const TasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
                       </IconButton>
                     </Tooltip>
                   </TableCell>
+
                   {dayHeaders.map((day) => {
                     return (
                       <TableCell align="center" className={classes.tableHeaderCell} key={day}>
@@ -148,40 +153,39 @@ const TasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
               <TableBody>
                 {Object.keys(stateTasks).map((taskNameKey) => {
                   const task = stateTasks[taskNameKey];
-                  return (
-                    <TableRow key={taskNameKey}>
-                      <TableCell className={classes.tableBodyCellCheckbox} align="center">
-                        {taskNameKey}
-                      </TableCell>
-                      {dayKeysArray.map((dayKey) => {
-                        const day = task[dayKey] || [];
-                        return (
-                          <TableCell
-                            className={classes.tableBodyCell}
-                            key={taskNameKey + dayKey}
-                            onClick={() => handleCellClick(taskNameKey, dayKey, day)}
-                          >
-                            <Grid container direction="row" justify="space-between" alignItems="center">
-                              <Grid item xs={12}>
-                                <Grid container direction="row" justify="center" alignItems="center">
-                                  <div component="ul" className={classes.paperUl}>
-                                    {day.map((dayAssignee, index) => {
-                                      return (
-                                        <li key={dayAssignee}>
-                                          {dayAssignee}
-                                          {index === day.length - 1 ? '' : ' /'}&nbsp;
-                                        </li>
-                                      );
-                                    })}
-                                  </div>
-                                </Grid>
+                  return roomKeys.map((roomName) => {
+                    const room = task[roomName] || [];
+                    return (
+                      <TableRow key={taskNameKey + roomName}>
+                        <TableCell className={classes[roomName]} align="center">
+                          {taskNameKey}
+                        </TableCell>
+                        {dayKeys.map((dayKey) => {
+                          const asignees = room[dayKey] || [];
+                          return (
+                            <TableCell
+                              className={classes.tableBodyCell}
+                              key={taskNameKey + roomName + dayKey}
+                              onClick={() => handleCellClick(taskNameKey, roomName, dayKey, asignees)}
+                            >
+                              <Grid container direction="row" justify="center" alignItems="center">
+                                <div component="ul" className={classes.paperUl}>
+                                  {asignees.map((assignee, index) => {
+                                    return (
+                                      <li key={assignee}>
+                                        {assignee}
+                                        {index === asignees.length - 1 ? '' : ' /'}&nbsp;
+                                      </li>
+                                    );
+                                  })}
+                                </div>
                               </Grid>
-                            </Grid>
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    );
+                  });
                 })}
               </TableBody>
             </Table>
@@ -204,4 +208,4 @@ const TasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
   );
 };
 
-export default TasksTable;
+export default RoomTasksTable;
