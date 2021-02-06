@@ -26,6 +26,7 @@ import { Box, Container, Paper, Tooltip, Zoom } from '@material-ui/core';
 
 import moment from 'moment';
 import { WeekContext } from '../contexts/WeekContext';
+import { HomeRounded } from '@material-ui/icons';
 const drawerWidth = 170;
 
 const useStyles = makeStyles((theme) => ({
@@ -147,9 +148,19 @@ export default function Layout(props) {
           >
             <MenuIcon />
           </IconButton>
+          <Paper className={classes.currentWeek}>
+            <IconButton
+              onClick={() => {
+                history.push('/');
+              }}
+            >
+              <HomeRounded fontSize="small" />
+            </IconButton>
+          </Paper>
 
-          <Typography variant="h6">Montessori Children's Garden Scheduler</Typography>
-
+          <Box display={{ xs: 'none', md: 'inline-block' }} padding={2}>
+            <Typography variant="h6">Montessori Children's Garden Scheduler</Typography>
+          </Box>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <Paper className={classes.currentWeek}>
