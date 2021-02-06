@@ -16,7 +16,7 @@ const MyWeek = () => {
       try {
         console.log('LOADING WHOLE WEEK');
         const snap = await firebaseRef.child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}`).once('value');
-        setWholeWeekState(snap.val());
+        setWholeWeekState(snap.val() || {});
       } catch (err) {
         console.error(err);
       }
@@ -44,8 +44,9 @@ const MyWeek = () => {
               ...weekSchedule['roomTasks'],
               [taskName]: {
                 ...weekSchedule['roomTasks']?.[taskName],
-                [roomName]: {
-                  [dayKey]: true
+                [dayKey]: {
+                  ...weekSchedule['roomTasks']?.[taskName]?.[dayKey],
+                  [roomName]: true
                 }
               }
             };

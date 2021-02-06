@@ -95,7 +95,9 @@ const useStyles = makeStyles((theme) => ({
   },
   currentWeek: {
     borderRadius: 50,
-    backgroundColor: theme.palette.primary.light
+    padding: 0,
+    backgroundColor: theme.palette.primary.light,
+    fontWeight: 'bold'
   }
 }));
 
@@ -146,19 +148,17 @@ export default function Layout(props) {
             <MenuIcon />
           </IconButton>
 
-          <Typography variant="h5" noWrap>
-            Montessori Children's Garden Scheduler
-          </Typography>
+          <Typography variant="h6">Montessori Children's Garden Scheduler</Typography>
 
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <Paper className={classes.currentWeek}>
               <IconButton onClick={prevWeek}>
-                <ChevronLeftIcon />
+                <ChevronLeftIcon fontSize="small" />
               </IconButton>
               {currentWeek}
               <IconButton onClick={nextWeek}>
-                <ChevronRightIcon />
+                <ChevronRightIcon fontSize="small" />
               </IconButton>
             </Paper>
           </div>

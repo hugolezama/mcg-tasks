@@ -40,13 +40,15 @@ const useStyles = makeStyles((theme) => ({
   tableHeaderCell: {
     borderLeft: '1px dotted #aaa',
     borderRight: '1px dotted #aaa',
-
-    // width: '12%',
     minWidth: 100,
     color: theme.palette.primary.dark,
     backgroundColor: '#f4f4f4',
     fontWeight: 'bold',
     fontSize: 14
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120
   },
   tableBodyCellCheckbox: {
     backgroundColor: '#f4f4f4',
@@ -63,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
       cursor: 'pointer'
     }
   },
-
   chip: {
     margin: theme.spacing(0.2),
     fontSize: 11,
@@ -83,6 +84,18 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.primary.light,
       cursor: 'pointer'
     }
+  },
+  Purple: {
+    color: '#b19cd9'
+  },
+  Blue: {
+    color: '#86d8f7'
+  },
+  Yellow: {
+    color: '#fdfd96'
+  },
+  Red: {
+    color: '#ff6961'
   }
 }));
 
@@ -107,7 +120,8 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
   return (
     <>
       <div style={{ height: '100%', width: '100%' }}>
-        <Grid container spacing={2} justify="center">
+        <br></br>
+        <Grid container spacing={1} justify="center">
           <Grid item xs={4}>
             <FormControl className={classes.formControl} fullWidth>
               <InputLabel id="demo-mutiple-chip-label">Staff member</InputLabel>
@@ -131,7 +145,7 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
         <br></br>
         <Paper className={classes.paper}>
           <TableContainer>
-            <Table className={classes.table} aria-labelledby="tableTitle" size="medium" aria-label="schedule table">
+            <Table className={classes.table} aria-labelledby="tableTitle" size="small" aria-label="schedule table">
               <TableHead>
                 <TableRow>
                   <TableCell align="center" className={classes.tableHeaderCellCheckbox}></TableCell>
@@ -192,6 +206,13 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
                   </TableRow>
                 )}
 
+                {myWeekState['tasks'] && (
+                  <TableRow key="taskDivider">
+                    <TableCell colSpan={6} align="center" className={classes.tableHeaderCellCheckbox}>
+                      Tasks
+                    </TableCell>
+                  </TableRow>
+                )}
                 {myWeekState['tasks'] &&
                   Object.keys(myWeekState['tasks']).map((taskKey, index) => {
                     return (
@@ -213,7 +234,13 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
                       </TableRow>
                     );
                   })}
-
+                {myWeekState['roomTasks'] && (
+                  <TableRow key="roomTaskDivider">
+                    <TableCell colSpan={6} align="center" className={classes.tableHeaderCellCheckbox}>
+                      Room Tasks
+                    </TableCell>
+                  </TableRow>
+                )}
                 {myWeekState['roomTasks'] &&
                   Object.keys(myWeekState['roomTasks']).map((taskKey, index) => {
                     console.log(taskKey);
@@ -226,11 +253,12 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
                         {dayKeysArray.map((dayKey) => {
                           return (
                             <TableCell className={classes.tableBodyCell} key={taskKey + dayKey} align="center">
-                              {Object.keys(myWeekState['tasks'][taskKey]).includes(dayKey) ? (
-                                <CheckCircleIcon fontSize="small" color="primary" />
-                              ) : (
-                                ''
-                              )}
+                              {Object.keys(myWeekState['roomTasks'][taskKey]).includes(dayKey)
+                                ? Object.keys(myWeekState['roomTasks'][taskKey][dayKey]).map((item) => {
+                                    return <CheckCircleIcon fontSize="small" className={classes[item]} />;
+                                  })
+                                : // <CheckCircleIcon fontSize="small" color="primary" />
+                                  ''}
                             </TableCell>
                           );
                         })}
