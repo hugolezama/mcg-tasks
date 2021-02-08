@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import { Grid, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import PropTypes from 'prop-types';
 
 const CreateTaskDialog = React.memo(({ dialogOpen, handleCloseDialog, addTaskRow }) => {
   const [taskName, setTaskName] = useState([]);
@@ -67,4 +68,12 @@ const CreateTaskDialog = React.memo(({ dialogOpen, handleCloseDialog, addTaskRow
     </Dialog>
   );
 });
+
+CreateTaskDialog.displayName = 'CreateTaskDialog';
 export default CreateTaskDialog;
+
+CreateTaskDialog.propTypes = {
+  dialogOpen: PropTypes.bool.isRequired,
+  handleCloseDialog: PropTypes.func.isRequired,
+  addTaskRow: PropTypes.func.isRequired
+};

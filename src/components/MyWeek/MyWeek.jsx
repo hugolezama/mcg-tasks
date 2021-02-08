@@ -1,3 +1,4 @@
+import React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import firebaseRef from '../../firebase/firebaseConfig';
 import moment from 'moment';
@@ -14,7 +15,6 @@ const MyWeek = () => {
   useEffect(() => {
     (async () => {
       try {
-        console.log('LOADING WHOLE WEEK');
         const snap = await firebaseRef.child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}`).once('value');
         setWholeWeekState(snap.val() || {});
       } catch (err) {
@@ -24,7 +24,6 @@ const MyWeek = () => {
   }, [startOfWeek]);
 
   useEffect(() => {
-    console.log('LOADING STAFF WEEK: ' + currentStaffMember);
     let weekSchedule = {};
 
     const schedule = wholeWeekState['schedule'] || {};
@@ -73,7 +72,6 @@ const MyWeek = () => {
     });
 
     setMyWeekState(weekSchedule);
-    console.log(weekSchedule);
   }, [currentStaffMember, wholeWeekState]);
 
   return (

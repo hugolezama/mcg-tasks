@@ -10,6 +10,7 @@ import { KeyboardTimePicker } from 'formik-material-ui-pickers';
 import moment from 'moment';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
+import PropTypes from 'prop-types';
 
 const scheduleValidation = Yup.object().shape({
   startTime: Yup.date().required('Start time is required'),
@@ -110,4 +111,14 @@ const ScheduleTimeDialog = React.memo(({ saveScheduleItem, dialogOpen, handleClo
     </MuiPickersUtilsProvider>
   );
 });
+
+ScheduleTimeDialog.displayName = 'ScheduleTimeDialog';
+
 export default ScheduleTimeDialog;
+
+ScheduleTimeDialog.propTypes = {
+  dialogOpen: PropTypes.bool.isRequired,
+  saveScheduleItem: PropTypes.func.isRequired,
+  handleCloseDialog: PropTypes.func.isRequired,
+  initialData: PropTypes.object.isRequired
+};

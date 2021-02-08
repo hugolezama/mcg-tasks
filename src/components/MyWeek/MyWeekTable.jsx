@@ -1,3 +1,5 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
   TableContainer,
   TableHead,
@@ -24,9 +26,6 @@ const dayHeaders = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const dayKeysArray = ['0', '1', '2', '3', '4'];
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1
-  },
   paper: {
     padding: theme.spacing(0),
     width: '100%',
@@ -60,26 +59,6 @@ const useStyles = makeStyles((theme) => ({
     padding: 5,
     minWidth: 100,
     fontSize: 12,
-    '&:hover': {
-      backgroundColor: theme.palette.primary.light,
-      cursor: 'pointer'
-    }
-  },
-  chip: {
-    margin: theme.spacing(0.2),
-    fontSize: 11,
-    '&:hover': {
-      backgroundColor: theme.palette.primary.light,
-      cursor: 'pointer'
-    }
-  },
-  paperUl: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    listStyle: 'none',
-    padding: theme.spacing(0.2),
-    margin: 0,
     '&:hover': {
       backgroundColor: theme.palette.primary.light,
       cursor: 'pointer'
@@ -120,7 +99,6 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
   return (
     <>
       <div style={{ height: '100%', width: '100%' }}>
-        <br></br>
         <Grid container spacing={1} justify="center">
           <Grid item xs={4}>
             <FormControl className={classes.formControl} fullWidth>
@@ -214,7 +192,7 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
                   </TableRow>
                 )}
                 {myWeekState['tasks'] &&
-                  Object.keys(myWeekState['tasks']).map((taskKey, index) => {
+                  Object.keys(myWeekState['tasks']).map((taskKey) => {
                     return (
                       <TableRow key={taskKey}>
                         <TableCell className={classes.tableBodyCellCheckbox} align="center">
@@ -242,9 +220,7 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
                   </TableRow>
                 )}
                 {myWeekState['roomTasks'] &&
-                  Object.keys(myWeekState['roomTasks']).map((taskKey, index) => {
-                    console.log(taskKey);
-                    console.log(Object.keys(myWeekState['roomTasks'][taskKey]));
+                  Object.keys(myWeekState['roomTasks']).map((taskKey) => {
                     return (
                       <TableRow key={taskKey}>
                         <TableCell className={classes.tableBodyCellCheckbox} align="center">
@@ -255,10 +231,15 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
                             <TableCell className={classes.tableBodyCell} key={taskKey + dayKey} align="center">
                               {Object.keys(myWeekState['roomTasks'][taskKey]).includes(dayKey)
                                 ? Object.keys(myWeekState['roomTasks'][taskKey][dayKey]).map((item) => {
-                                    return <CheckCircleIcon fontSize="small" className={classes[item]} />;
+                                    return (
+                                      <CheckCircleIcon
+                                        key={taskKey + dayKey + item}
+                                        fontSize="small"
+                                        className={classes[item]}
+                                      />
+                                    );
                                   })
-                                : // <CheckCircleIcon fontSize="small" color="primary" />
-                                  ''}
+                                : ''}
                             </TableCell>
                           );
                         })}
@@ -275,3 +256,9 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
 };
 
 export default MyWeekTable;
+
+MyWeekTable.propTypes = {
+  setCurrentStaffMember: PropTypes.func.isRequired,
+  currentStaffMember: PropTypes.string.isRequired,
+  myWeekState: PropTypes.object.isRequired
+};

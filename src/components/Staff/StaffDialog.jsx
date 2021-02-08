@@ -8,6 +8,8 @@ import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import * as yup from 'yup';
 import { FormControl, Grid, IconButton, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { useFormik } from 'formik';
+import PropTypes from 'prop-types';
+
 import React, { useState } from 'react';
 
 const validationSchema = yup.object({
@@ -41,17 +43,17 @@ const StaffDialog = React.memo(({ handleSaveStaff, dialogOpen, handleCloseDialog
         disableBackdropClick
         disableEscapeKeyDown
         onClose={handleCloseDialog}
-        aria-labelledby="form-dialog-title"
+        fullWidth={true}
+        maxWidth={'sm'}
       >
         <DialogTitle id="form-dialog-title">Add New Staff Member</DialogTitle>
-        <div style={{ padding: 20 }}>
+        <div style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 0 }}>
           <form onSubmit={formik.handleSubmit} autoComplete="off" id="staffForm">
             <input type="hidden" value={formik.values.id} id="id"></input>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
+            <Grid container spacing={2}>
+              <Grid item sm={12} xs={12}>
                 <TextField
                   fullWidth
-                  autoFocus
                   margin="dense"
                   id="name"
                   name="name"
@@ -65,8 +67,8 @@ const StaffDialog = React.memo(({ handleSaveStaff, dialogOpen, handleCloseDialog
                   color="primary"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControl variant="outlined" fullWidth color="primary">
+              <Grid item sm={12} xs={6}>
+                <FormControl variant="outlined" fullWidth color="primary" margin="dense">
                   <InputLabel id="room-label">Room</InputLabel>
                   <Select
                     labelId="room-label"
@@ -86,7 +88,7 @@ const StaffDialog = React.memo(({ handleSaveStaff, dialogOpen, handleCloseDialog
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item sm={12} xs={6}>
                 <TextField
                   fullWidth
                   margin="dense"
@@ -103,7 +105,7 @@ const StaffDialog = React.memo(({ handleSaveStaff, dialogOpen, handleCloseDialog
             </Grid>
           </form>
         </div>
-        <div style={{ padding: 20 }}>
+        <div style={{ padding: 10 }}>
           <Grid container>
             <Grid item xs={6} style={{ display: 'flex', alignItems: 'center' }}>
               {initialData.id && (
@@ -153,3 +155,11 @@ const StaffDialog = React.memo(({ handleSaveStaff, dialogOpen, handleCloseDialog
   );
 });
 export default StaffDialog;
+
+StaffDialog.propTypes = {
+  dialogOpen: PropTypes.bool.isRequired,
+  handleSaveStaff: PropTypes.func.isRequired,
+  handleCloseDialog: PropTypes.func.isRequired,
+  handleRemoveStaff: PropTypes.func.isRequired,
+  initialData: PropTypes.object.isRequired
+};

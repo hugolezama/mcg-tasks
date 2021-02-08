@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   TableContainer,
   TableHead,
@@ -15,7 +16,8 @@ import AccessTimeRoundedIcon from '@material-ui/icons/AccessTimeRounded';
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import moment from 'moment';
-import { useState } from 'react';
+import PropTypes from 'prop-types';
+
 import AddStaffScheduleDialog from './AddStaffScheduleDialog';
 import ScheduleTimeDialog from './ScheduleTimeDialog';
 
@@ -200,4 +202,11 @@ const ScheduleTable = ({ stateSchedule, saveScheduleItem, addStaffSchedule }) =>
   );
 };
 
+ScheduleTable.displayName = 'ScheduleTable';
 export default ScheduleTable;
+
+ScheduleTable.propTypes = {
+  saveScheduleItem: PropTypes.func.isRequired,
+  addStaffSchedule: PropTypes.func.isRequired,
+  stateSchedule: PropTypes.object.isRequired
+};

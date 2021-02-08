@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import firebaseRef from '../firebase/firebaseConfig';
 
 export const StaffContext = createContext();
@@ -27,4 +28,8 @@ export const StaffProvider = ({ children }) => {
       {children}
     </StaffContext.Provider>
   );
+};
+
+StaffProvider.propTypes = {
+  children: PropTypes.node.isRequired
 };

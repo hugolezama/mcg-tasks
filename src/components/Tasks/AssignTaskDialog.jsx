@@ -1,9 +1,8 @@
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-
 import { Chip, FormControl, Grid, Input, InputLabel, makeStyles, MenuItem, Select } from '@material-ui/core';
-
+import PropTypes from 'prop-types';
 import React, { memo, useContext, useEffect, useState } from 'react';
 import { StaffContext } from '../../contexts/StaffContext';
 
@@ -36,6 +35,7 @@ const MenuProps = {
     }
   }
 };
+
 const AssignTaskDialog = memo(({ assignTask, dialogOpen, handleCloseDialog, initialData }) => {
   const [assignees, setAssignees] = useState([]);
   const { stateStaff } = useContext(StaffContext);
@@ -138,4 +138,12 @@ const AssignTaskDialog = memo(({ assignTask, dialogOpen, handleCloseDialog, init
     </Dialog>
   );
 });
+AssignTaskDialog.displayName = 'AssignTaskDialog';
 export default AssignTaskDialog;
+
+AssignTaskDialog.propTypes = {
+  dialogOpen: PropTypes.bool.isRequired,
+  assignTask: PropTypes.func.isRequired,
+  handleCloseDialog: PropTypes.func.isRequired,
+  initialData: PropTypes.object.isRequired
+};

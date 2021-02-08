@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import ListStaff from './ListStaff';
 import firebaseRef from '../../firebase/firebaseConfig';
 import { StaffContext } from '../../contexts/StaffContext';
@@ -9,7 +9,6 @@ const Staff = () => {
   const [arrayStaff, setArrayStaff] = useState([]);
 
   useEffect(() => {
-    console.log('USE EFFFECT');
     const loadedStaff = [];
     for (const key in stateStaff) {
       loadedStaff.push({
@@ -64,19 +63,19 @@ const Staff = () => {
   );
 
   const removeStaffHandler = useCallback(
-    (staffId) => {
-      const ref = firebaseRef.child('/staff');
-      ref
-        .child(staffId)
-        .remove()
-        .then((res) => console.log(res))
-        .catch((err) => console.error(err));
+    async (staffId) => {
+      try {
+        const ref = firebaseRef.child('/staff');
+        await ref.child(staffId).remove();
 
-      setStateStaff((prev) => {
-        const newObject = { ...prev };
-        delete newObject[staffId];
-        return newObject;
-      });
+        setStateStaff((prev) => {
+          const newObject = { ...prev };
+          delete newObject[staffId];
+          return newObject;
+        });
+      } catch (err) {
+        console.error(err);
+      }
     },
     [setStateStaff]
   );
