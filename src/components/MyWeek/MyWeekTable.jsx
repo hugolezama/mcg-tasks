@@ -221,8 +221,6 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
                 )}
                 {myWeekState['roomTasks'] &&
                   Object.keys(myWeekState['roomTasks']).map((taskKey) => {
-                    console.log(taskKey);
-                    console.log(Object.keys(myWeekState['roomTasks'][taskKey]));
                     return (
                       <TableRow key={taskKey}>
                         <TableCell className={classes.tableBodyCellCheckbox} align="center">
