@@ -128,7 +128,6 @@ export default function Layout(props) {
 
   React.useEffect(() => {
     function handleResize() {
-      console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
       if (window.innerWidth < 600) {
         setOpen(false);
       }
