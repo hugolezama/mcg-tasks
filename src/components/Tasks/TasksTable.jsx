@@ -12,8 +12,8 @@ import {
   IconButton
 } from '@material-ui/core';
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
-
-import { useState } from 'react';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import AssignTaskDialog from './AssignTaskDialog';
 import CreateTaskDialog from './CreateTaskDialog';
 
@@ -89,6 +89,12 @@ const useStyles = makeStyles((theme) => ({
     }
   }
 }));
+
+TasksTable.propTypes = {
+  addTaskRow: PropTypes.func.isRequired,
+  assignTask: PropTypes.func.isRequired,
+  stateTasks: PropTypes.object.isRequired
+};
 
 const TasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
   const classes = useStyles();

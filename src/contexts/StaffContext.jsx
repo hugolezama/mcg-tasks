@@ -1,7 +1,12 @@
 import React, { createContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import firebaseRef from '../firebase/firebaseConfig';
 
 export const StaffContext = createContext();
+
+StaffProvider.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 export const StaffProvider = ({ children }) => {
   const [stateStaff, setStateStaff] = useState({});

@@ -1,6 +1,11 @@
 import React, { createContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 export const WeekContext = createContext();
+
+WeekProvider.propTypes = {
+  children: PropTypes.node.isRequired
+};
 
 export const WeekProvider = ({ children }) => {
   const [startOfWeek, setStartOfWeek] = useState(moment().startOf('isoweek'));

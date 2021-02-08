@@ -8,6 +8,8 @@ import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import * as yup from 'yup';
 import { FormControl, Grid, IconButton, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { useFormik } from 'formik';
+import PropTypes from 'prop-types';
+
 import React, { useState } from 'react';
 
 const validationSchema = yup.object({
@@ -15,6 +17,14 @@ const validationSchema = yup.object({
   room: yup.string('Select room').required('Room is required'),
   role: yup.string('Role')
 });
+
+StaffDialog.propTypes = {
+  dialogOpen: PropTypes.bool.isRequired,
+  handleSaveStaff: PropTypes.func.isRequired,
+  handleCloseDialog: PropTypes.func.isRequired,
+  handleRemoveStaff: PropTypes.func.isRequired,
+  initialData: PropTypes.object.isRequired
+};
 
 const StaffDialog = React.memo(({ handleSaveStaff, dialogOpen, handleCloseDialog, initialData, handleRemoveStaff }) => {
   const [confirmationDialog, setConfirmationDialog] = useState(false);

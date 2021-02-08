@@ -5,12 +5,20 @@ import * as Yup from 'yup';
 import { FormControl, Grid, InputLabel, MenuItem } from '@material-ui/core';
 import { Field, Formik, Form } from 'formik';
 import React, { useContext, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { StaffContext } from '../../contexts/StaffContext';
 import { Select } from 'formik-material-ui';
 
 const scheduleValidation = Yup.object().shape({
   staffSelected: Yup.string().required('Please select one staff member')
 });
+
+AddStaffScheduleDialog.propTypes = {
+  dialogOpen: PropTypes.bool.isRequired,
+  handleCloseDialog: PropTypes.func.isRequired,
+  addStaffSchedule: PropTypes.func.isRequired,
+  stateSchedule: PropTypes.object.isRequired
+};
 
 const AddStaffScheduleDialog = React.memo(({ addStaffSchedule, dialogOpen, handleCloseDialog, stateSchedule }) => {
   const { stateStaff } = useContext(StaffContext);
@@ -113,4 +121,5 @@ const AddStaffScheduleDialog = React.memo(({ addStaffSchedule, dialogOpen, handl
     </Dialog>
   );
 });
+AddStaffScheduleDialog.displayName = 'AddStaffScheduleDialog';
 export default AddStaffScheduleDialog;

@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -102,6 +103,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+Layout.propTypes = {
+  children: PropTypes.node.isRequired
+};
+
 export default function Layout(props) {
   const classes = useStyles();
   const history = useHistory();
@@ -159,7 +164,7 @@ export default function Layout(props) {
           </Paper>
 
           <Box display={{ xs: 'none', md: 'inline-block' }} padding={2}>
-            <Typography variant="h6">Montessori Children's Garden Scheduler</Typography>
+            <Typography variant="h6">{`Montessori Children's Garden Scheduler`}</Typography>
           </Box>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
