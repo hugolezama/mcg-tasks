@@ -13,13 +13,6 @@ const scheduleValidation = Yup.object().shape({
   staffSelected: Yup.string().required('Please select one staff member')
 });
 
-AddStaffScheduleDialog.propTypes = {
-  dialogOpen: PropTypes.bool.isRequired,
-  handleCloseDialog: PropTypes.func.isRequired,
-  addStaffSchedule: PropTypes.func.isRequired,
-  stateSchedule: PropTypes.object.isRequired
-};
-
 const AddStaffScheduleDialog = React.memo(({ addStaffSchedule, dialogOpen, handleCloseDialog, stateSchedule }) => {
   const { stateStaff } = useContext(StaffContext);
   const [staffList, setStaffList] = useState([]);
@@ -123,3 +116,10 @@ const AddStaffScheduleDialog = React.memo(({ addStaffSchedule, dialogOpen, handl
 });
 AddStaffScheduleDialog.displayName = 'AddStaffScheduleDialog';
 export default AddStaffScheduleDialog;
+
+AddStaffScheduleDialog.propTypes = {
+  dialogOpen: PropTypes.bool.isRequired,
+  handleCloseDialog: PropTypes.func.isRequired,
+  addStaffSchedule: PropTypes.func.isRequired,
+  stateSchedule: PropTypes.object.isRequired
+};

@@ -3,18 +3,14 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 export const WeekContext = createContext();
 
-WeekProvider.propTypes = {
-  children: PropTypes.node.isRequired
-};
-
 export const WeekProvider = ({ children }) => {
   const [startOfWeek, setStartOfWeek] = useState(moment().startOf('isoweek'));
   const [currentWeek, setCurrentWeek] = useState(
-    startOfWeek.format('MM/DD/YYYY') + ' - ' + moment(startOfWeek).add(5, 'days').format('MM/DD/YYYY')
+    startOfWeek.format('MM/DD/YY') + ' - ' + moment(startOfWeek).add(5, 'days').format('MM/DD/YY')
   );
 
   useEffect(() => {
-    setCurrentWeek(startOfWeek.format('MM/DD/YYYY') + ' - ' + moment(startOfWeek).add(5, 'days').format('MM/DD/YYYY'));
+    setCurrentWeek(startOfWeek.format('MM/DD/YY') + ' - ' + moment(startOfWeek).add(5, 'days').format('MM/DD/YY'));
   }, [startOfWeek]);
 
   return (
@@ -29,4 +25,8 @@ export const WeekProvider = ({ children }) => {
       {children}
     </WeekContext.Provider>
   );
+};
+
+WeekProvider.propTypes = {
+  children: PropTypes.node.isRequired
 };

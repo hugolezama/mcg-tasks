@@ -98,12 +98,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-RoomTasksTable.propTypes = {
-  stateTasks: PropTypes.object.isRequired,
-  assignTask: PropTypes.func.isRequired,
-  addTaskRow: PropTypes.func.isRequired
-};
-
 const RoomTasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
   const classes = useStyles();
   const [currentRecord, setCurrentRecord] = useState({
@@ -219,3 +213,8 @@ const RoomTasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
 };
 
 export default RoomTasksTable;
+RoomTasksTable.propTypes = {
+  stateTasks: PropTypes.object.isRequired,
+  assignTask: PropTypes.func.isRequired,
+  addTaskRow: PropTypes.func.isRequired
+};

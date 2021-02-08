@@ -28,7 +28,7 @@ import { Box, Container, Paper, Tooltip, Zoom } from '@material-ui/core';
 import moment from 'moment';
 import { WeekContext } from '../contexts/WeekContext';
 import { HomeRounded } from '@material-ui/icons';
-const drawerWidth = 170;
+const drawerWidth = 140;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     })
   },
   menuButton: {
-    marginRight: 36
+    marginRight: 0
   },
   hide: {
     display: 'none'
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen
     }),
     overflowX: 'hidden',
-    width: theme.spacing(7) + 1
+    width: theme.spacing(6) - 1
   },
   toolbar: {
     display: 'flex',
@@ -99,7 +99,13 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 50,
     padding: 0,
     backgroundColor: theme.palette.primary.light,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: theme.typography.fontSize - 2
+    }
+  },
+  icon: {
+    minWidth: '30px'
   }
 }));
 
@@ -113,6 +119,23 @@ export default function Layout(props) {
   const [open, setOpen] = useState(true);
 
   const { startOfWeek, setStartOfWeek, currentWeek } = useContext(WeekContext);
+
+  React.useEffect(() => {
+    if (window.innerWidth < 600) {
+      setOpen(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    function handleResize() {
+      console.log('resized to: ', window.innerWidth, 'x', window.innerHeight);
+      if (window.innerWidth < 600) {
+        setOpen(false);
+      }
+    }
+
+    window.addEventListener('resize', handleResize);
+  });
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -153,17 +176,16 @@ export default function Layout(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Paper className={classes.currentWeek}>
-            <IconButton
-              onClick={() => {
-                history.push('/');
-              }}
-            >
-              <HomeRounded fontSize="small" />
-            </IconButton>
-          </Paper>
 
-          <Box display={{ xs: 'none', md: 'inline-block' }} padding={2}>
+          <IconButton
+            onClick={() => {
+              history.push('/');
+            }}
+          >
+            <HomeRounded fontSize="small" />
+          </IconButton>
+
+          <Box display={{ xs: 'none', md: 'block' }} padding={2}>
             <Typography variant="h6">{`Montessori Children's Garden Scheduler`}</Typography>
           </Box>
           <div className={classes.grow} />
@@ -195,10 +217,6 @@ export default function Layout(props) {
         }}
       >
         <div className={classes.toolbar}>
-          <Box display={{ xs: 'none', sm: 'inline-block' }}>
-            <img src="/logomini2.jpg" width="115" height="90" alt="MCG Logo" hidden={!open}></img>
-          </Box>
-
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
@@ -207,7 +225,7 @@ export default function Layout(props) {
         <List>
           <Tooltip title={open ? '' : 'My Week'} placement="right" TransitionComponent={Zoom}>
             <ListItem button key="MyWeek" onClick={() => history.push('/my-week')} dense>
-              <ListItemIcon>
+              <ListItemIcon className={classes.icon}>
                 <EventNoteRoundedIcon color="secondary" />
               </ListItemIcon>
               <ListItemText primary="My Week" />
@@ -216,7 +234,7 @@ export default function Layout(props) {
           <Divider variant="middle" />
           <Tooltip title={open ? '' : 'Schedule'} placement="right" TransitionComponent={Zoom}>
             <ListItem button key="Schedule" onClick={() => history.push('/schedule')} dense>
-              <ListItemIcon>
+              <ListItemIcon className={classes.icon}>
                 <AccessTimeIcon color="secondary" />
               </ListItemIcon>
               <ListItemText primary="Schedule" />
@@ -226,7 +244,7 @@ export default function Layout(props) {
           <Divider variant="middle" />
           <Tooltip title={open ? '' : 'Staff'} placement="right" TransitionComponent={Zoom}>
             <ListItem button key="Staff" onClick={() => history.push('/staff')} dense>
-              <ListItemIcon>
+              <ListItemIcon className={classes.icon}>
                 <PeopleAltRoundedIcon color="secondary" />
               </ListItemIcon>
               <ListItemText primary="Staff" />
@@ -235,7 +253,7 @@ export default function Layout(props) {
           <Divider variant="middle" />
           <Tooltip title={open ? '' : 'Tasks'} placement="right" TransitionComponent={Zoom}>
             <ListItem button key="Tasks" onClick={() => history.push('/tasks')} dense>
-              <ListItemIcon>
+              <ListItemIcon className={classes.icon}>
                 <AssignmentIndIcon color="secondary" />
               </ListItemIcon>
               <ListItemText primary="Tasks" />
@@ -244,7 +262,7 @@ export default function Layout(props) {
           <Divider variant="middle" />
           <Tooltip title={open ? '' : 'Room Tasks'} placement="right" TransitionComponent={Zoom}>
             <ListItem button key="RoomTasks" onClick={() => history.push('/room-tasks')} dense>
-              <ListItemIcon>
+              <ListItemIcon className={classes.icon}>
                 <AssignmentIcon color="secondary" />
               </ListItemIcon>
               <ListItemText primary="Room Tasks" />

@@ -4,10 +4,6 @@ import firebaseRef from '../firebase/firebaseConfig';
 
 export const StaffContext = createContext();
 
-StaffProvider.propTypes = {
-  children: PropTypes.node.isRequired
-};
-
 export const StaffProvider = ({ children }) => {
   const [stateStaff, setStateStaff] = useState({});
 
@@ -32,4 +28,8 @@ export const StaffProvider = ({ children }) => {
       {children}
     </StaffContext.Provider>
   );
+};
+
+StaffProvider.propTypes = {
+  children: PropTypes.node.isRequired
 };

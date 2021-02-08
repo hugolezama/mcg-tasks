@@ -76,12 +76,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-ScheduleTable.propTypes = {
-  saveScheduleItem: PropTypes.func.isRequired,
-  addStaffSchedule: PropTypes.func.isRequired,
-  stateSchedule: PropTypes.object.isRequired
-};
-
 const ScheduleTable = ({ stateSchedule, saveScheduleItem, addStaffSchedule }) => {
   const classes = useStyles();
   const [currentRecord, setCurrentRecord] = useState({
@@ -210,3 +204,9 @@ const ScheduleTable = ({ stateSchedule, saveScheduleItem, addStaffSchedule }) =>
 
 ScheduleTable.displayName = 'ScheduleTable';
 export default ScheduleTable;
+
+ScheduleTable.propTypes = {
+  saveScheduleItem: PropTypes.func.isRequired,
+  addStaffSchedule: PropTypes.func.isRequired,
+  stateSchedule: PropTypes.object.isRequired
+};

@@ -21,13 +21,6 @@ const scheduleValidation = Yup.object().shape({
 });
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-ScheduleTimeDialog.propTypes = {
-  dialogOpen: PropTypes.bool.isRequired,
-  saveScheduleItem: PropTypes.func.isRequired,
-  handleCloseDialog: PropTypes.func.isRequired,
-  initialData: PropTypes.object.isRequired
-};
-
 const ScheduleTimeDialog = React.memo(({ saveScheduleItem, dialogOpen, handleCloseDialog, initialData }) => {
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -122,3 +115,10 @@ const ScheduleTimeDialog = React.memo(({ saveScheduleItem, dialogOpen, handleClo
 ScheduleTimeDialog.displayName = 'ScheduleTimeDialog';
 
 export default ScheduleTimeDialog;
+
+ScheduleTimeDialog.propTypes = {
+  dialogOpen: PropTypes.bool.isRequired,
+  saveScheduleItem: PropTypes.func.isRequired,
+  handleCloseDialog: PropTypes.func.isRequired,
+  initialData: PropTypes.object.isRequired
+};

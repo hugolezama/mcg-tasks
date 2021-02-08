@@ -78,12 +78,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-MyWeekTable.propTypes = {
-  setCurrentStaffMember: PropTypes.func.isRequired,
-  currentStaffMember: PropTypes.string.isRequired,
-  myWeekState: PropTypes.object.isRequired
-};
-
 const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember }) => {
   const classes = useStyles();
 
@@ -105,7 +99,6 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
   return (
     <>
       <div style={{ height: '100%', width: '100%' }}>
-        <br></br>
         <Grid container spacing={1} justify="center">
           <Grid item xs={4}>
             <FormControl className={classes.formControl} fullWidth>
@@ -265,3 +258,9 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
 };
 
 export default MyWeekTable;
+
+MyWeekTable.propTypes = {
+  setCurrentStaffMember: PropTypes.func.isRequired,
+  currentStaffMember: PropTypes.string.isRequired,
+  myWeekState: PropTypes.object.isRequired
+};

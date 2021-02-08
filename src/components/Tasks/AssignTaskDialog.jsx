@@ -36,13 +36,6 @@ const MenuProps = {
   }
 };
 
-AssignTaskDialog.propTypes = {
-  dialogOpen: PropTypes.bool.isRequired,
-  assignTask: PropTypes.func.isRequired,
-  handleCloseDialog: PropTypes.func.isRequired,
-  initialData: PropTypes.object.isRequired
-};
-
 const AssignTaskDialog = memo(({ assignTask, dialogOpen, handleCloseDialog, initialData }) => {
   const [assignees, setAssignees] = useState([]);
   const { stateStaff } = useContext(StaffContext);
@@ -147,3 +140,10 @@ const AssignTaskDialog = memo(({ assignTask, dialogOpen, handleCloseDialog, init
 });
 AssignTaskDialog.displayName = 'AssignTaskDialog';
 export default AssignTaskDialog;
+
+AssignTaskDialog.propTypes = {
+  dialogOpen: PropTypes.bool.isRequired,
+  assignTask: PropTypes.func.isRequired,
+  handleCloseDialog: PropTypes.func.isRequired,
+  initialData: PropTypes.object.isRequired
+};
