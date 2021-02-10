@@ -7,11 +7,11 @@ export const WeekContext = createContext();
 export const WeekProvider = ({ children }) => {
   const [startOfWeek, setStartOfWeek] = useState(moment().startOf('isoweek'));
   const [currentWeek, setCurrentWeek] = useState(
-    startOfWeek.format('MM/DD/YY') + ' - ' + moment(startOfWeek).add(5, 'days').format('MM/DD/YY')
+    startOfWeek.format('MMM DD') + ' - ' + moment(startOfWeek).add(5, 'days').format('MMM DD')
   );
 
   useEffect(() => {
-    setCurrentWeek(startOfWeek.format('MM/DD/YY') + ' - ' + moment(startOfWeek).add(5, 'days').format('MM/DD/YY'));
+    setCurrentWeek(startOfWeek.format('MMM DD') + ' - ' + moment(startOfWeek).add(5, 'days').format('MMM DD'));
   }, [startOfWeek]);
 
   return (

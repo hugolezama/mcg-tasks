@@ -10,8 +10,10 @@ import {
   Grid,
   makeStyles,
   Tooltip,
-  IconButton
+  IconButton,
+  Typography
 } from '@material-ui/core';
+
 import AccessTimeRoundedIcon from '@material-ui/icons/AccessTimeRounded';
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
@@ -105,7 +107,10 @@ const ScheduleTable = ({ stateSchedule, saveScheduleItem, addStaffSchedule }) =>
 
   return (
     <>
-      <div style={{ height: '100%', width: '100%' }}>
+      <div style={{ width: '100%' }}>
+        <Typography variant="h6" align="center" color="secondary" style={{ padding: 10 }}>
+          Schedule
+        </Typography>
         <Paper className={classes.paper}>
           <TableContainer>
             <Table className={classes.table} aria-labelledby="tableTitle" size="medium" aria-label="schedule table">

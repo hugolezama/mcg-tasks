@@ -1,14 +1,13 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
+import { CssBaseline, Typography } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -19,16 +18,48 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import PeopleAltRoundedIcon from '@material-ui/icons/PeopleAltRounded';
 import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { Box, Container, Paper, Tooltip, Zoom } from '@material-ui/core';
-
+import { HomeRounded } from '@material-ui/icons';
 import moment from 'moment';
 import { WeekContext } from '../contexts/WeekContext';
-import { HomeRounded } from '@material-ui/icons';
-const drawerWidth = 140;
+import { AuthContext } from '../contexts/AuthContext';
+import { firebaseApp } from '../firebase/firebaseConfig';
+
+const drawerWidth = 135;
+
+const drawers = [
+  {
+    key: 'My Week',
+    path: '/my-week',
+    icon: EventNoteRoundedIcon,
+    public: true
+  },
+  {
+    key: 'Schedule',
+    path: '/schedule',
+    icon: AccessTimeIcon
+  },
+
+  {
+    key: 'Tasks',
+    path: '/tasks',
+    icon: AssignmentIndIcon
+  },
+  {
+    key: 'Room Tasks',
+    path: '/room-tasks',
+    icon: AssignmentIcon
+  },
+  {
+    key: 'Staff',
+    path: '/staff',
+    icon: PeopleAltRoundedIcon
+  }
+];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,7 +92,8 @@ const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    height: '100vh'
   },
   drawerOpen: {
     width: drawerWidth,
@@ -98,6 +130,7 @@ const useStyles = makeStyles((theme) => ({
   currentWeek: {
     borderRadius: 50,
     padding: 0,
+    border: 0,
     backgroundColor: theme.palette.primary.light,
     fontWeight: 'bold',
     [theme.breakpoints.down('sm')]: {
@@ -106,6 +139,19 @@ const useStyles = makeStyles((theme) => ({
   },
   icon: {
     minWidth: '30px'
+  },
+  logout: {
+    color: theme.palette.error.main
+  },
+  login: {
+    color: theme.palette.primary.main
+  },
+  footer: {
+    paddingTop: theme.spacing(4) - 2
+  },
+  listItem: {
+    backgroundColor: theme.palette.primary.light + ' !important',
+    fontWeight: 'bold'
   }
 }));
 
@@ -116,9 +162,10 @@ Layout.propTypes = {
 export default function Layout(props) {
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
   const [open, setOpen] = useState(true);
-
   const { startOfWeek, setStartOfWeek, currentWeek } = useContext(WeekContext);
+  const { currentUser } = useContext(AuthContext);
 
   React.useEffect(() => {
     if (window.innerWidth < 600) {
@@ -154,6 +201,10 @@ export default function Layout(props) {
     setStartOfWeek(prevWeek);
   };
 
+  const activeRoute = (routeName) => {
+    return location.pathname === routeName ? true : false;
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -163,7 +214,7 @@ export default function Layout(props) {
           [classes.appBarShift]: open
         })}
       >
-        <Toolbar>
+        <Toolbar style={{ maxWidth: '100hv' }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -180,6 +231,7 @@ export default function Layout(props) {
             onClick={() => {
               history.push('/');
             }}
+            style={{ marginLeft: 0 }}
           >
             <HomeRounded fontSize="small" />
           </IconButton>
@@ -188,7 +240,7 @@ export default function Layout(props) {
             <Typography variant="h6">{`Montessori Children's Garden Scheduler`}</Typography>
           </Box>
           <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
+          <Box className={classes.sectionDesktop}>
             <Paper className={classes.currentWeek}>
               <IconButton onClick={prevWeek}>
                 <ChevronLeftIcon fontSize="small" />
@@ -198,7 +250,7 @@ export default function Layout(props) {
                 <ChevronRightIcon fontSize="small" />
               </IconButton>
             </Paper>
-          </div>
+          </Box>
         </Toolbar>
       </AppBar>
 
@@ -222,51 +274,81 @@ export default function Layout(props) {
         </div>
 
         <List>
-          <Tooltip title={open ? '' : 'My Week'} placement="right" TransitionComponent={Zoom}>
-            <ListItem button key="MyWeek" onClick={() => history.push('/my-week')} dense>
-              <ListItemIcon className={classes.icon}>
-                <EventNoteRoundedIcon color="secondary" />
-              </ListItemIcon>
-              <ListItemText primary="My Week" />
-            </ListItem>
-          </Tooltip>
-          <Divider variant="middle" />
-          <Tooltip title={open ? '' : 'Schedule'} placement="right" TransitionComponent={Zoom}>
-            <ListItem button key="Schedule" onClick={() => history.push('/schedule')} dense>
-              <ListItemIcon className={classes.icon}>
-                <AccessTimeIcon color="secondary" />
-              </ListItemIcon>
-              <ListItemText primary="Schedule" />
-            </ListItem>
-          </Tooltip>
+          {currentUser && (
+            <>
+              {drawers.map((drawer) => {
+                return (
+                  <div key={drawer.key}>
+                    <Divider variant="fullWidth" />
+                    <Tooltip title={open ? '' : drawer.key} placement="right" TransitionComponent={Zoom}>
+                      <ListItem
+                        button
+                        onClick={() => history.push(drawer.path)}
+                        dense
+                        selected={activeRoute(drawer.path)}
+                        classes={{ selected: classes.listItem }}
+                      >
+                        <ListItemIcon className={classes.icon}>
+                          <drawer.icon color="secondary" />
+                        </ListItemIcon>
+                        <ListItemText primary={drawer.key} />
+                      </ListItem>
+                    </Tooltip>
+                  </div>
+                );
+              })}
 
-          <Divider variant="middle" />
-          <Tooltip title={open ? '' : 'Staff'} placement="right" TransitionComponent={Zoom}>
-            <ListItem button key="Staff" onClick={() => history.push('/staff')} dense>
-              <ListItemIcon className={classes.icon}>
-                <PeopleAltRoundedIcon color="secondary" />
-              </ListItemIcon>
-              <ListItemText primary="Staff" />
-            </ListItem>
-          </Tooltip>
-          <Divider variant="middle" />
-          <Tooltip title={open ? '' : 'Tasks'} placement="right" TransitionComponent={Zoom}>
-            <ListItem button key="Tasks" onClick={() => history.push('/tasks')} dense>
-              <ListItemIcon className={classes.icon}>
-                <AssignmentIndIcon color="secondary" />
-              </ListItemIcon>
-              <ListItemText primary="Tasks" />
-            </ListItem>
-          </Tooltip>
-          <Divider variant="middle" />
-          <Tooltip title={open ? '' : 'Room Tasks'} placement="right" TransitionComponent={Zoom}>
-            <ListItem button key="RoomTasks" onClick={() => history.push('/room-tasks')} dense>
-              <ListItemIcon className={classes.icon}>
-                <AssignmentIcon color="secondary" />
-              </ListItemIcon>
-              <ListItemText primary="Room Tasks" />
-            </ListItem>
-          </Tooltip>
+              <div className={classes.footer}>
+                <Divider variant="fullWidth" />
+                <Tooltip title={open ? '' : 'Logout'} placement="right" TransitionComponent={Zoom}>
+                  <ListItem button key="Logout" onClick={() => firebaseApp.auth().signOut()} dense>
+                    <ListItemIcon className={classes.icon}>
+                      <ExitToAppIcon color="error" style={{ transform: 'rotate(-180deg)' }} />
+                    </ListItemIcon>
+                    <ListItemText primary="Logout" className={classes.logout} />
+                  </ListItem>
+                </Tooltip>
+              </div>
+            </>
+          )}
+
+          {!currentUser && (
+            <>
+              {drawers.map((drawer) => {
+                if (!drawer.public) return null;
+                return (
+                  <div key={drawer.key}>
+                    <Divider variant="fullWidth" />
+                    <Tooltip title={open ? '' : drawer.key} placement="right" TransitionComponent={Zoom}>
+                      <ListItem
+                        button
+                        onClick={() => history.push(drawer.path)}
+                        dense
+                        selected={activeRoute(drawer.path)}
+                        classes={{ selected: classes.listItem }}
+                      >
+                        <ListItemIcon className={classes.icon}>
+                          <drawer.icon color="secondary" />
+                        </ListItemIcon>
+                        <ListItemText primary={drawer.key} />
+                      </ListItem>
+                    </Tooltip>
+                  </div>
+                );
+              })}
+              <div className={classes.footer}>
+                <Divider variant="fullWidth" />
+                <Tooltip title={open ? '' : 'Login'} placement="right" TransitionComponent={Zoom}>
+                  <ListItem button key="Login" onClick={() => history.push('/login')} dense>
+                    <ListItemIcon className={classes.icon}>
+                      <ExitToAppIcon color="primary" />
+                    </ListItemIcon>
+                    <ListItemText primary="Login" className={classes.login} />
+                  </ListItem>
+                </Tooltip>
+              </div>
+            </>
+          )}
         </List>
       </Drawer>
 

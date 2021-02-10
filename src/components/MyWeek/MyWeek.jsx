@@ -30,7 +30,9 @@ const MyWeek = () => {
     const roomTasks = wholeWeekState['roomTasks'] || {};
     const tasks = wholeWeekState['tasks'] || {};
 
-    weekSchedule['schedule'] = schedule[currentStaffMember];
+    if (schedule[currentStaffMember]) {
+      weekSchedule['schedule'] = schedule[currentStaffMember];
+    }
 
     Object.keys(roomTasks).forEach((taskName) => {
       const roomTask = roomTasks[taskName];
@@ -70,7 +72,7 @@ const MyWeek = () => {
         }
       });
     });
-
+    console.log(weekSchedule);
     setMyWeekState(weekSchedule);
   }, [currentStaffMember, wholeWeekState]);
 

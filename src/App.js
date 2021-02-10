@@ -7,31 +7,23 @@ import Schedule from './components/Schedule/Schedule';
 import Staff from './components/Staff/Staff';
 import RoomTasks from './components/RoomTasks/RoomTasks';
 import MyWeek from './components/MyWeek/MyWeek';
+import Login from './components/Login/Login';
+import PrivateRoute from './PrivateRoute';
 
 const App = () => {
   return (
-    <Layout>
-      <Switch>
-        <Route exact path="/">
-          <Home />
-        </Route>
-        <Route path="/schedule">
-          <Schedule />
-        </Route>
-        <Route path="/my-week">
-          <MyWeek />
-        </Route>
-        <Route path="/tasks">
-          <Tasks />
-        </Route>
-        <Route path="/room-tasks">
-          <RoomTasks />
-        </Route>
-        <Route path="/staff">
-          <Staff />
-        </Route>
-      </Switch>
-    </Layout>
+    <Switch>
+      <Route path="/login" component={Login} />
+      <Layout>
+        <Route path="/my-week" component={MyWeek} />
+        <Route exact path="/" component={Home} />
+
+        <PrivateRoute path="/schedule" component={Schedule} />
+        <PrivateRoute path="/tasks" component={Tasks} />
+        <PrivateRoute path="/room-tasks" component={RoomTasks} />
+        <PrivateRoute path="/staff" component={Staff} />
+      </Layout>
+    </Switch>
   );
 };
 
