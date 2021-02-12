@@ -14,7 +14,7 @@ const Staff = () => {
       loadedStaff.push({
         id: key,
         name: stateStaff[key].name,
-        room: stateStaff[key].room,
+        rooms: stateStaff[key].rooms,
         role: stateStaff[key].role
       });
     }
@@ -28,7 +28,7 @@ const Staff = () => {
         if (staff.id) {
           await ref.child(staff.id).update({
             name: staff.name,
-            room: staff.room,
+            rooms: staff.rooms,
             role: staff.role
           });
 
@@ -37,7 +37,7 @@ const Staff = () => {
               ...prev,
               [staff.id]: {
                 name: staff.name,
-                room: staff.room,
+                rooms: staff.rooms,
                 role: staff.role
               }
             };

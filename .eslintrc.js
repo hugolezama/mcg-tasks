@@ -13,7 +13,14 @@ module.exports = {
     sourceType: 'module'
   },
   plugins: ['react'],
-  rules: {},
+  rules: {
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: ['@material-ui/*/*/*', '!@material-ui/core/test-utils/*']
+      }
+    ]
+  },
   settings: {
     react: {
       version: 'detect'

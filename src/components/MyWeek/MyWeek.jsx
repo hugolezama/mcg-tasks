@@ -1,12 +1,11 @@
 import React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import firebaseRef from '../../firebase/firebaseConfig';
-import moment from 'moment';
 import { WeekContext } from '../../contexts/WeekContext';
 import MyWeekTable from './MyWeekTable';
 
 const MyWeek = () => {
-  const { startOfWeek } = useContext(WeekContext);
+  const { currentWeekId } = useContext(WeekContext);
 
   const [wholeWeekState, setWholeWeekState] = useState({});
   const [myWeekState, setMyWeekState] = useState({});
@@ -15,13 +14,13 @@ const MyWeek = () => {
   useEffect(() => {
     (async () => {
       try {
-        const snap = await firebaseRef.child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}`).once('value');
+        const snap = await firebaseRef.child(`weeks/${currentWeekId}`).once('value');
         setWholeWeekState(snap.val() || {});
       } catch (err) {
         console.error(err);
       }
     })();
-  }, [startOfWeek]);
+  }, [currentWeekId]);
 
   useEffect(() => {
     let weekSchedule = {};

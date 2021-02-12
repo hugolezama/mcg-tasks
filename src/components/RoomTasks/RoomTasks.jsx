@@ -1,19 +1,16 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { WeekContext } from '../../contexts/WeekContext';
 import firebaseRef from '../../firebase/firebaseConfig';
-import moment from 'moment';
 import RoomTasksTable from './RoomTasksTable';
 
 const RoomTasks = () => {
   const [stateTasks, setStateTasks] = useState({});
-  const { startOfWeek } = useContext(WeekContext);
+  const { currentWeekId } = useContext(WeekContext);
 
   useEffect(() => {
     (async () => {
       try {
-        const snap = await firebaseRef
-          .child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/roomTasks`)
-          .once('value');
+        const snap = await firebaseRef.child(`weeks/${currentWeekId}/roomTasks`).once('value');
         const data = snap.val();
 
         setStateTasks(data || {});
@@ -21,7 +18,7 @@ const RoomTasks = () => {
         console.error(err);
       }
     })();
-  }, [startOfWeek]);
+  }, [currentWeekId]);
 
   const addTaskRow = useCallback((taskName) => {
     const newRoomTaskRow = {
@@ -40,9 +37,7 @@ const RoomTasks = () => {
   const assignTask = useCallback(
     async (taskName, weekDay, assignees, room) => {
       try {
-        const ref = await firebaseRef.child(
-          `weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/roomTasks/${taskName}/${room}`
-        );
+        const ref = await firebaseRef.child(`weeks/${currentWeekId}/roomTasks/${taskName}/${room}`);
         await ref.child(weekDay).set(assignees);
 
         setStateTasks((prev) => {
@@ -61,7 +56,7 @@ const RoomTasks = () => {
         console.error(err);
       }
     },
-    [startOfWeek]
+    [currentWeekId]
   );
 
   return (

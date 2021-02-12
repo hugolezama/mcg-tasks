@@ -3,31 +3,38 @@ import PropTypes from 'prop-types';
 import { useHistory, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import { CssBaseline, Typography } from '@material-ui/core';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import PeopleAltRoundedIcon from '@material-ui/icons/PeopleAltRounded';
-import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { firebaseApp } from '../firebase/firebaseConfig';
+import { WeekContext } from '../contexts/WeekContext';
+import { AuthContext } from '../contexts/AuthContext';
+import moment from 'moment';
+import {
+  Drawer,
+  AppBar,
+  Toolbar,
+  List,
+  CssBaseline,
+  Typography,
+  Box,
+  Container,
+  Paper,
+  Tooltip,
+  Zoom,
+  Divider,
+  IconButton,
+  ListItem,
+  ListItemIcon,
+  ListItemText
+} from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import { Box, Container, Paper, Tooltip, Zoom } from '@material-ui/core';
-import { HomeRounded } from '@material-ui/icons';
-import moment from 'moment';
-import { WeekContext } from '../contexts/WeekContext';
-import { AuthContext } from '../contexts/AuthContext';
-import { firebaseApp } from '../firebase/firebaseConfig';
+import PeopleAltRoundedIcon from '@material-ui/icons/PeopleAltRounded';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
+import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import MenuIcon from '@material-ui/icons/Menu';
 
 const drawerWidth = 135;
 
@@ -192,13 +199,11 @@ export default function Layout(props) {
   };
 
   const nextWeek = () => {
-    const nextWeek = moment(startOfWeek).add(1, 'week');
-    setStartOfWeek(nextWeek);
+    setStartOfWeek(moment(startOfWeek).add(1, 'week'));
   };
 
   const prevWeek = () => {
-    const prevWeek = moment(startOfWeek).subtract(1, 'week');
-    setStartOfWeek(prevWeek);
+    setStartOfWeek(moment(startOfWeek).subtract(1, 'week'));
   };
 
   const activeRoute = (routeName) => {
@@ -233,7 +238,7 @@ export default function Layout(props) {
             }}
             style={{ marginLeft: 0 }}
           >
-            <HomeRounded fontSize="small" />
+            <HomeRoundedIcon fontSize="small" />
           </IconButton>
 
           <Box display={{ xs: 'none', md: 'block' }} padding={2}>
@@ -279,7 +284,6 @@ export default function Layout(props) {
               {drawers.map((drawer) => {
                 return (
                   <div key={drawer.key}>
-                    <Divider variant="fullWidth" />
                     <Tooltip title={open ? '' : drawer.key} placement="right" TransitionComponent={Zoom}>
                       <ListItem
                         button
@@ -294,12 +298,12 @@ export default function Layout(props) {
                         <ListItemText primary={drawer.key} />
                       </ListItem>
                     </Tooltip>
+                    <Divider variant="fullWidth" />
                   </div>
                 );
               })}
 
               <div className={classes.footer}>
-                <Divider variant="fullWidth" />
                 <Tooltip title={open ? '' : 'Logout'} placement="right" TransitionComponent={Zoom}>
                   <ListItem button key="Logout" onClick={() => firebaseApp.auth().signOut()} dense>
                     <ListItemIcon className={classes.icon}>
@@ -318,7 +322,6 @@ export default function Layout(props) {
                 if (!drawer.public) return null;
                 return (
                   <div key={drawer.key}>
-                    <Divider variant="fullWidth" />
                     <Tooltip title={open ? '' : drawer.key} placement="right" TransitionComponent={Zoom}>
                       <ListItem
                         button
@@ -333,11 +336,11 @@ export default function Layout(props) {
                         <ListItemText primary={drawer.key} />
                       </ListItem>
                     </Tooltip>
+                    <Divider variant="fullWidth" />
                   </div>
                 );
               })}
               <div className={classes.footer}>
-                <Divider variant="fullWidth" />
                 <Tooltip title={open ? '' : 'Login'} placement="right" TransitionComponent={Zoom}>
                   <ListItem button key="Login" onClick={() => history.push('/login')} dense>
                     <ListItemIcon className={classes.icon}>

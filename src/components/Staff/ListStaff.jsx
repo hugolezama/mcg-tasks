@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import Chip from '@material-ui/core/Chip';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,11 +11,13 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { getComparator, stableSort } from '../../utils/utils';
 import { Container, IconButton, Typography } from '@material-ui/core';
-
+import RestaurantIcon from '@material-ui/icons/Restaurant';
 import CreateRoundedIcon from '@material-ui/icons/CreateRounded';
 import StaffDialog from './StaffDialog';
-
+import SchoolIcon from '@material-ui/icons/School';
+import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
 import TableHeader from '../Common/TableHeader';
+import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 
 const headCells = [
   { id: 'name', disablePadding: false, label: 'Name' },
@@ -25,7 +27,7 @@ const headCells = [
 const emptyStaff = {
   name: '',
   role: '',
-  room: ''
+  rooms: []
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -64,22 +66,29 @@ const useStyles = makeStyles((theme) => ({
   tableCellCheck: {
     width: 80
   },
-
+  room: {
+    marginRight: 10
+  },
   Purple: {
-    backgroundColor: '#b19cd9',
-    boxShadow: '5px 5px 10px grey'
+    color: '#b19cd9'
   },
   Blue: {
-    backgroundColor: '#86d8f7',
-    boxShadow: '5px 5px 10px grey'
+    color: '#89abd2'
   },
   Yellow: {
-    backgroundColor: '#fdfd96',
-    boxShadow: '5px 5px 10px grey'
+    color: '#fcde4b'
   },
   Red: {
-    backgroundColor: '#ff6961',
-    boxShadow: '5px 5px 10px grey'
+    color: '#ff6961'
+  },
+  Kitchen: {
+    color: '#ffb347'
+  },
+  Office: {
+    color: '#808080'
+  },
+  Other: {
+    color: '#808080'
   }
 }));
 
@@ -94,7 +103,7 @@ export default function ListStaff({ staffList, handleSaveStaff, handleRemoveStaf
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [currentRecord, setCurrentRecord] = useState(emptyStaff);
 
@@ -121,7 +130,28 @@ export default function ListStaff({ staffList, handleSaveStaff, handleRemoveStaf
     setDialogOpen(true);
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, staffList.length - page * rowsPerPage);
+  const getRoomIcon = (roomKey) => {
+    let retVal;
+    switch (roomKey) {
+      case 'Purple':
+      case 'Blue':
+      case 'Yellow':
+      case 'Red':
+        retVal = <SchoolIcon key={roomKey} className={`${classes.room} ${classes[roomKey]}`} />;
+        break;
+      case 'Kitchen':
+        retVal = <RestaurantIcon key={roomKey} className={`${classes.room} ${classes[roomKey]}`} />;
+        break;
+      case 'Office':
+        retVal = <DesktopWindowsIcon key={roomKey} className={`${classes.room} ${classes[roomKey]}`} />;
+        break;
+      default:
+        retVal = <EmojiPeopleIcon key={roomKey} className={`${classes.room} ${classes[roomKey]}`} />;
+        break;
+    }
+    return retVal;
+  };
+
   return (
     <div className={classes.root}>
       <Container maxWidth={'lg'} style={{ padding: 1 }}>
@@ -162,17 +192,15 @@ export default function ListStaff({ staffList, handleSaveStaff, handleRemoveStaf
                           {row.name}
                         </TableCell>
                         <TableCell>
-                          <Chip className={classes[row.room]} />
+                          {row.rooms &&
+                            Object.keys(row.rooms).map((roomKey) => {
+                              return getRoomIcon(row.rooms[roomKey]);
+                            })}
                         </TableCell>
                         <TableCell>{row.role}</TableCell>
                       </TableRow>
                     );
                   })}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
               </TableBody>
             </Table>
           </TableContainer>
