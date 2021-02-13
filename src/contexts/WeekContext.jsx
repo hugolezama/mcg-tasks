@@ -15,7 +15,6 @@ export const WeekProvider = ({ children }) => {
     const start = moment(startOfWeek);
     setCurrentWeek(start.format('MMM DD') + ' - ' + moment(start).add(5, 'days').format('MMM DD'));
     setCurrentWeekId(start.format('MM-DD-YYYY'));
-    console.log(start.format('MM-DD-YYYY'));
   }, [startOfWeek]);
 
   useEffect(() => {

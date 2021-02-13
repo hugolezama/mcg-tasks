@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   TableContainer,
   TableHead,
@@ -101,10 +101,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ScheduleTable = ({ stateSchedule, saveScheduleItem, addStaffSchedule, deleteStaffSchedule }) => {
-  useEffect(() => {
-    console.log('Rendering ScheduleTable', JSON.stringify(stateSchedule['Teresa'], null, 2));
-  });
-
   const classes = useStyles();
   const [currentRecord, setCurrentRecord] = useState({
     staffId: '',
@@ -135,7 +131,6 @@ const ScheduleTable = ({ stateSchedule, saveScheduleItem, addStaffSchedule, dele
 
   const handlePrevDay = (initialData) => {
     const newIndex = parseInt(initialData.index) - 1;
-    console.log(newIndex);
     if (newIndex >= 0) {
       setCurrentRecord({
         staffId: initialData.staffId,
@@ -148,7 +143,6 @@ const ScheduleTable = ({ stateSchedule, saveScheduleItem, addStaffSchedule, dele
 
   const handleNextDay = (initialData) => {
     const newIndex = parseInt(initialData.index) + 1;
-    console.log(newIndex);
     if (newIndex <= 4) {
       setCurrentRecord({
         staffId: initialData.staffId,

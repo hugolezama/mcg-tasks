@@ -9,12 +9,7 @@ const Schedule = () => {
   const { currentWeekId } = useContext(WeekContext);
 
   useEffect(() => {
-    console.log('Rendering Schedule');
-  });
-
-  useEffect(() => {
     (async () => {
-      console.log('Loading WEEK DATA');
       try {
         const scheduleSnap = await firebaseRef.child(`weeks/${currentWeekId}/schedule`).once('value');
         const data = scheduleSnap.val();
@@ -27,18 +22,12 @@ const Schedule = () => {
   }, [currentWeekId]);
 
   const saveScheduleItem = async (staffId, index, values, dayOff) => {
-    console.log('START saveScheduleItem');
     try {
       const ref = await firebaseRef.child(`weeks/${currentWeekId}/schedule/${staffId}`);
-      await ref.child(index).set(
-        {
-          time: values,
-          dayOff
-        },
-        () => {
-          console.log('SAVE COMPLETE!');
-        }
-      );
+      await ref.child(index).set({
+        time: values,
+        dayOff
+      });
 
       setStateSchedule((prevSched) => {
         return {
@@ -55,7 +44,6 @@ const Schedule = () => {
     } catch (err) {
       console.error(err);
     }
-    console.log('END saveScheduleItem');
   };
 
   const addStaffSchedule = async (staffId) => {

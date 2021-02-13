@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import * as Yup from 'yup';
 import { Grid, IconButton, Snackbar, Typography } from '@material-ui/core';
 import { Field, Formik, Form } from 'formik';
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useState } from 'react';
 import { CheckboxWithLabel } from 'formik-material-ui/dist';
 import { KeyboardTimePicker } from 'formik-material-ui-pickers';
 import moment from 'moment';
@@ -32,11 +32,6 @@ const ScheduleTimeDialog = memo(
   ({ saveScheduleItem, dialogOpen, handleCloseDialog, initialData, nextDay, prevDay }) => {
     const [openSnack, setOpenSnack] = useState(false);
 
-    useEffect(() => {
-      console.log('Rendering ScheduleTimeDialog');
-      console.log(initialData);
-    });
-
     const handleClose = () => {
       setOpenSnack(false);
     };
@@ -61,7 +56,6 @@ const ScheduleTimeDialog = memo(
             }}
             validationSchema={scheduleValidation}
             onSubmit={async (values, actions) => {
-              console.log('START');
               const times = [];
               times.push(moment(values.startTime).format('kk:mm'));
               times.push(moment(values.endTime).format('kk:mm'));
@@ -71,7 +65,6 @@ const ScheduleTimeDialog = memo(
 
               await saveScheduleItem(initialData.staffId, initialData.index, times, values.dayOff);
               setOpenSnack(true);
-              console.log('END');
               actions.setTouched({});
             }}
             enableReinitialize={true}

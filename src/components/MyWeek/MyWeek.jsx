@@ -71,7 +71,6 @@ const MyWeek = () => {
         }
       });
     });
-    console.log(weekSchedule);
     setMyWeekState(weekSchedule);
   }, [currentStaffMember, wholeWeekState]);
 
