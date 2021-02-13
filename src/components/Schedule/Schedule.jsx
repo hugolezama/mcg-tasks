@@ -9,7 +9,12 @@ const Schedule = () => {
   const { currentWeekId } = useContext(WeekContext);
 
   useEffect(() => {
+    console.log('Rendering Schedule');
+  });
+
+  useEffect(() => {
     (async () => {
+      console.log('Loading WEEK DATA');
       try {
         const scheduleSnap = await firebaseRef.child(`weeks/${currentWeekId}/schedule`).once('value');
         const data = scheduleSnap.val();
@@ -25,10 +30,15 @@ const Schedule = () => {
     console.log('START saveScheduleItem');
     try {
       const ref = await firebaseRef.child(`weeks/${currentWeekId}/schedule/${staffId}`);
-      await ref.child(index).update({
-        time: values,
-        dayOff
-      });
+      await ref.child(index).set(
+        {
+          time: values,
+          dayOff
+        },
+        () => {
+          console.log('SAVE COMPLETE!');
+        }
+      );
 
       setStateSchedule((prevSched) => {
         return {
@@ -54,19 +64,10 @@ const Schedule = () => {
 
       const defaultDay = {
         dayOff: false,
-        time: {
-          0: '07:00',
-          1: '16:00',
-          2: '13:00'
-        }
+        time: ['07:00', '16:00', '13:00']
       };
-      const defaultSched = {
-        0: defaultDay,
-        1: defaultDay,
-        2: defaultDay,
-        3: defaultDay,
-        4: defaultDay
-      };
+      const defaultSched = [defaultDay, defaultDay, defaultDay, defaultDay, defaultDay];
+
       await ref.set(defaultSched);
       setStateSchedule((prev) => {
         return {
@@ -79,12 +80,28 @@ const Schedule = () => {
     }
   };
 
+  const deleteStaffSchedule = async (staffId) => {
+    try {
+      const ref = firebaseRef.child(`weeks/${currentWeekId}/schedule/${staffId}`);
+
+      await ref.set(null);
+      setStateSchedule((prev) => {
+        const newObject = { ...prev };
+        delete newObject[staffId];
+        return newObject;
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <ScheduleTable
         stateSchedule={stateSchedule}
         saveScheduleItem={saveScheduleItem}
         addStaffSchedule={addStaffSchedule}
+        deleteStaffSchedule={deleteStaffSchedule}
       ></ScheduleTable>
     </>
   );

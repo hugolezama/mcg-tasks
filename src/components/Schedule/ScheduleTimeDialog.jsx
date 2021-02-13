@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import * as Yup from 'yup';
 import { Grid, IconButton, Snackbar, Typography } from '@material-ui/core';
 import { Field, Formik, Form } from 'formik';
-import React, { useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { CheckboxWithLabel } from 'formik-material-ui/dist';
 import { KeyboardTimePicker } from 'formik-material-ui-pickers';
 import moment from 'moment';
@@ -28,9 +28,14 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const ScheduleTimeDialog = React.memo(
+const ScheduleTimeDialog = memo(
   ({ saveScheduleItem, dialogOpen, handleCloseDialog, initialData, nextDay, prevDay }) => {
     const [openSnack, setOpenSnack] = useState(false);
+
+    useEffect(() => {
+      console.log('Rendering ScheduleTimeDialog');
+      console.log(initialData);
+    });
 
     const handleClose = () => {
       setOpenSnack(false);
@@ -55,9 +60,8 @@ const ScheduleTimeDialog = React.memo(
               dayOff: initialData.dayOff || false
             }}
             validationSchema={scheduleValidation}
-            onSubmit={async (values) => {
+            onSubmit={async (values, actions) => {
               console.log('START');
-
               const times = [];
               times.push(moment(values.startTime).format('kk:mm'));
               times.push(moment(values.endTime).format('kk:mm'));
@@ -67,28 +71,49 @@ const ScheduleTimeDialog = React.memo(
 
               await saveScheduleItem(initialData.staffId, initialData.index, times, values.dayOff);
               setOpenSnack(true);
-
               console.log('END');
-              // handleCloseDialog();
+              actions.setTouched({});
             }}
-            enableReinitialize
+            enableReinitialize={true}
           >
-            {({ submitForm, values }) => (
+            {({ values, touched, resetForm }) => (
               <Form>
                 <DialogTitle id="form-dialog-title">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <IconButton onClick={() => prevDay(initialData)}>
-                      <ChevronLeftIcon fontSize="large" color="primary" />
+                    <IconButton
+                      onClick={() => {
+                        if (Object.keys(touched).length) {
+                          if (confirm('You have not saved the changes, if you continue they will be discarded')) {
+                            resetForm({});
+                            prevDay(initialData);
+                          }
+                        } else {
+                          resetForm({});
+                          prevDay(initialData);
+                        }
+                      }}
+                      disabled={initialData.index === '0'}
+                    >
+                      <ChevronLeftIcon fontSize="large" color={initialData.index === '0' ? 'disabled' : 'primary'} />
                     </IconButton>
                     <Typography variant="h6">
                       Schedule for {initialData.staffId} - {days[initialData.index]}
                     </Typography>
                     <IconButton
                       onClick={() => {
-                        nextDay(initialData);
+                        if (Object.keys(touched).length) {
+                          if (confirm('You have not saved the changes, if you continue they will be discarded')) {
+                            resetForm({});
+                            nextDay(initialData);
+                          }
+                        } else {
+                          resetForm({});
+                          nextDay(initialData);
+                        }
                       }}
+                      disabled={initialData.index === '4'}
                     >
-                      <ChevronRightIcon fontSize="large" color="primary" />
+                      <ChevronRightIcon fontSize="large" color={initialData.index === '4' ? 'disabled' : 'primary'} />
                     </IconButton>
                   </div>
                 </DialogTitle>
@@ -135,7 +160,7 @@ const ScheduleTimeDialog = React.memo(
                       </Grid>
 
                       <Grid item>
-                        <Button color="primary" variant="outlined" type="submit" onClick={submitForm} form="staffForm">
+                        <Button color="primary" variant="outlined" type="submit">
                           Save
                         </Button>
                       </Grid>

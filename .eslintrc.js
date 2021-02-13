@@ -19,7 +19,8 @@ module.exports = {
       {
         patterns: ['@material-ui/*/*/*', '!@material-ui/core/test-utils/*']
       }
-    ]
+    ],
+    'no-unused-vars': 'warn'
   },
   settings: {
     react: {
