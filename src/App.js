@@ -9,7 +9,6 @@ import RoomTasks from './components/RoomTasks/RoomTasks';
 import MyWeek from './components/MyWeek/MyWeek';
 import Login from './components/Login/Login';
 import PrivateRoute from './PrivateRoute';
-
 const App = () => {
   return (
     <Switch>

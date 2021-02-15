@@ -206,6 +206,12 @@ export default function Layout(props) {
     setStartOfWeek(moment(startOfWeek).subtract(1, 'week'));
   };
 
+  const handleLogout = () => {
+    firebaseApp.auth().signOut();
+    localStorage.removeItem('user');
+    history.push('/login');
+  };
+
   const activeRoute = (routeName) => {
     return location.pathname === routeName ? true : false;
   };
@@ -305,7 +311,7 @@ export default function Layout(props) {
 
               <div className={classes.footer}>
                 <Tooltip title={open ? '' : 'Logout'} placement="right" TransitionComponent={Zoom}>
-                  <ListItem button key="Logout" onClick={() => firebaseApp.auth().signOut()} dense>
+                  <ListItem button key="Logout" onClick={handleLogout} dense>
                     <ListItemIcon className={classes.icon}>
                       <ExitToAppIcon color="error" style={{ transform: 'rotate(-180deg)' }} />
                     </ListItemIcon>

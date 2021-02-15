@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Button,
   Card,
@@ -8,6 +8,7 @@ import {
   Grid,
   makeStyles,
   TextField,
+  Link,
   Typography
 } from '@material-ui/core';
 import { firebaseApp } from '../../firebase/firebaseConfig';
@@ -15,8 +16,8 @@ import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { AuthContext } from '../../contexts/AuthContext';
 import { withRouter, Redirect } from 'react-router-dom';
+import PasswordReset from './PasswordReset';
 
 const validationSchema = yup.object({
   email: yup.string('Enter your email').email('Enter a valid email').required('Email is required'),
@@ -54,29 +55,35 @@ const useStyles = makeStyles((theme) => ({
 }));
 const Login = ({ history }) => {
   const classes = useStyles();
+  const currentUser = localStorage.getItem('user') || null;
+  const [passwordResetOpen, setPasswordResetOpen] = useState(false);
+
+  const handleLogin = useCallback(
+    async (values) => {
+      const { email, password } = values;
+
+      try {
+        await firebaseApp.auth().signInWithEmailAndPassword(email, password);
+        history.push('/');
+      } catch (error) {
+        alert(error);
+      }
+    },
+    [history]
+  );
+
+  const handleCloseDialog = () => {
+    setPasswordResetOpen(false);
+  };
+
   const formik = useFormik({
     initialValues: {
       email: '',
       password: ''
     },
-    onSubmit: useCallback(
-      async (values) => {
-        const { email, password } = values;
-        console.log(email);
-        console.log(password);
-        try {
-          await firebaseApp.auth().signInWithEmailAndPassword(email, password);
-          history.push('/');
-        } catch (error) {
-          alert(error);
-        }
-      },
-      [history]
-    ),
+    onSubmit: handleLogin,
     validationSchema: validationSchema
   });
-
-  const { currentUser } = useContext(AuthContext);
 
   if (currentUser) {
     return <Redirect to="/" />;
@@ -129,6 +136,11 @@ const Login = ({ history }) => {
                         helperText={formik.touched.password && formik.errors.password}
                       />
                     </Grid>
+                    <Grid container item xs={12} className={classes.formInput} justify="flex-end">
+                      <Link href="#" onClick={() => setPasswordResetOpen(true)}>
+                        <Typography variant="caption">Reset Password</Typography>
+                      </Link>
+                    </Grid>
                     <Grid container justify="flex-end" className={classes.formInput}>
                       <Button type="submit" variant="contained" color="primary" fullWidth>
                         Sign In
@@ -141,6 +153,8 @@ const Login = ({ history }) => {
           </Grid>
         </Grid>
       </Container>
+
+      <PasswordReset dialogOpen={passwordResetOpen} handleCloseDialog={handleCloseDialog} />
     </div>
   );
 };

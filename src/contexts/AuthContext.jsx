@@ -9,7 +9,12 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     firebaseApp.auth().onAuthStateChanged((user) => {
-      setCurrentUser(user);
+      if (user) {
+        setCurrentUser(user);
+        localStorage.setItem('user', user.email);
+      } else {
+        localStorage.removeItem('user');
+      }
     });
   }, []);
 
