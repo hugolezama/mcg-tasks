@@ -9,7 +9,8 @@ import {
   Grid,
   makeStyles,
   Tooltip,
-  IconButton
+  IconButton,
+  Typography
 } from '@material-ui/core';
 import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 import PropTypes from 'prop-types';
@@ -128,7 +129,10 @@ const RoomTasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
 
   return (
     <>
-      <div style={{ height: '100%', width: '100%' }}>
+      <div style={{ width: '100%' }}>
+        <Typography variant="h6" align="center" color="secondary" style={{ padding: 10, paddingBottom: 5 }}>
+          Room Tasks
+        </Typography>
         <Paper className={classes.paper}>
           <TableContainer>
             <Table className={classes.table} size="small">

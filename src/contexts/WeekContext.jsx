@@ -5,14 +5,23 @@ import moment from 'moment';
 export const WeekContext = createContext();
 
 export const WeekProvider = ({ children }) => {
-  const [startOfWeek, setStartOfWeek] = useState(moment().startOf('isoweek'));
+  const [startOfWeek, setStartOfWeek] = useState(moment().startOf('isoWeek'));
   const [currentWeek, setCurrentWeek] = useState(
-    startOfWeek.format('MM/DD/YY') + ' - ' + moment(startOfWeek).add(5, 'days').format('MM/DD/YY')
+    startOfWeek.format('MMM DD') + ' - ' + moment(startOfWeek).add(5, 'days').format('MMM DD')
   );
+  const [currentWeekId, setCurrentWeekId] = useState(moment(startOfWeek).format('MM-DD-YYYY'));
 
   useEffect(() => {
-    setCurrentWeek(startOfWeek.format('MM/DD/YY') + ' - ' + moment(startOfWeek).add(5, 'days').format('MM/DD/YY'));
+    const start = moment(startOfWeek);
+    setCurrentWeek(start.format('MMM DD') + ' - ' + moment(start).add(5, 'days').format('MMM DD'));
+    setCurrentWeekId(start.format('MM-DD-YYYY'));
   }, [startOfWeek]);
+
+  useEffect(() => {
+    if (currentWeekId === 'BASE') {
+      setCurrentWeek('BASE WEEK');
+    }
+  }, [currentWeekId]);
 
   return (
     <WeekContext.Provider
@@ -20,7 +29,8 @@ export const WeekProvider = ({ children }) => {
         startOfWeek,
         setStartOfWeek,
         currentWeek,
-        setCurrentWeek
+        currentWeekId,
+        setCurrentWeekId
       }}
     >
       {children}

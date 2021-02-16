@@ -13,7 +13,8 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  Typography
 } from '@material-ui/core';
 import moment from 'moment';
 import AccessTimeRoundedIcon from '@material-ui/icons/AccessTimeRounded';
@@ -98,8 +99,11 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
 
   return (
     <>
-      <div style={{ height: '100%', width: '100%' }}>
-        <Grid container spacing={1} justify="center">
+      <div style={{ width: '100%' }}>
+        <Typography variant="h6" align="center" color="secondary" style={{ padding: 10, paddingBottom: 0 }}>
+          My Week
+        </Typography>
+        <Grid container spacing={0} justify="center">
           <Grid item xs={4}>
             <FormControl className={classes.formControl} fullWidth>
               <InputLabel id="demo-mutiple-chip-label">Staff member</InputLabel>
@@ -122,133 +126,135 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
         </Grid>
         <br></br>
         <Paper className={classes.paper}>
-          <TableContainer>
-            <Table className={classes.table} aria-labelledby="tableTitle" size="small" aria-label="schedule table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center" className={classes.tableHeaderCellCheckbox}></TableCell>
-                  {dayHeaders.map((day) => {
-                    return (
-                      <TableCell align="center" className={classes.tableHeaderCell} key={day}>
-                        {day}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {myWeekState['schedule'] && (
-                  <TableRow key={'schedule'}>
-                    <TableCell className={classes.tableBodyCellCheckbox} align="center">
-                      {'Schedule'}
-                    </TableCell>
-                    {myWeekState['schedule'].map((day, index) => {
+          {myWeekState && Object.keys(myWeekState).length > 0 && (
+            <TableContainer>
+              <Table className={classes.table} aria-labelledby="tableTitle" size="small" aria-label="schedule table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center" className={classes.tableHeaderCellCheckbox}></TableCell>
+                    {dayHeaders.map((day) => {
                       return (
-                        <TableCell className={classes.tableBodyCell} key={'schedule' + index}>
-                          {day.dayOff && (
-                            <Grid container direction="row">
-                              <Grid item xs={12} align="center">
-                                Day Off
-                              </Grid>
-                            </Grid>
-                          )}
-                          {!day.dayOff && (
-                            <Grid container direction="row" justify="space-between" alignItems="center">
-                              <Grid item xs={2}>
-                                <AccessTimeRoundedIcon fontSize="small" color="secondary" />
-                              </Grid>
-                              <Grid item xs={10}>
-                                <Grid container direction="row" justify="center" alignItems="center">
-                                  {moment(day.time[0], 'hh:mm').format('h:mm')}
-                                  {' - '}
-                                  {moment(day.time[1], 'hh:mm').format('h:mm')}
-                                </Grid>
-                              </Grid>
-                              {day.time[2] && (
-                                <>
-                                  <Grid item xs={2}>
-                                    <FastfoodIcon fontSize="small" color="secondary" />
-                                  </Grid>
-                                  <Grid item xs={10}>
-                                    <Grid container direction="row" justify="center" alignItems="center">
-                                      {moment(day.time[2], 'hh:mm').format('h:mm')}
-                                    </Grid>
-                                  </Grid>
-                                </>
-                              )}
-                            </Grid>
-                          )}
+                        <TableCell align="center" className={classes.tableHeaderCell} key={day}>
+                          {day}
                         </TableCell>
                       );
                     })}
                   </TableRow>
-                )}
+                </TableHead>
+                <TableBody>
+                  {myWeekState['schedule'] && (
+                    <TableRow key={'schedule'}>
+                      <TableCell className={classes.tableBodyCellCheckbox} align="center">
+                        {'Schedule'}
+                      </TableCell>
+                      {myWeekState['schedule'].map((day, index) => {
+                        return (
+                          <TableCell className={classes.tableBodyCell} key={'schedule' + index}>
+                            {day.dayOff && (
+                              <Grid container direction="row">
+                                <Grid item xs={12} align="center">
+                                  Day Off
+                                </Grid>
+                              </Grid>
+                            )}
+                            {!day.dayOff && (
+                              <Grid container direction="row" justify="space-between" alignItems="center">
+                                <Grid item xs={2}>
+                                  <AccessTimeRoundedIcon fontSize="small" color="secondary" />
+                                </Grid>
+                                <Grid item xs={10}>
+                                  <Grid container direction="row" justify="center" alignItems="center">
+                                    {moment(day.time[0], 'hh:mm').format('h:mm')}
+                                    {' - '}
+                                    {moment(day.time[1], 'hh:mm').format('h:mm')}
+                                  </Grid>
+                                </Grid>
+                                {day.time[2] && (
+                                  <>
+                                    <Grid item xs={2}>
+                                      <FastfoodIcon fontSize="small" color="secondary" />
+                                    </Grid>
+                                    <Grid item xs={10}>
+                                      <Grid container direction="row" justify="center" alignItems="center">
+                                        {moment(day.time[2], 'hh:mm').format('h:mm')}
+                                      </Grid>
+                                    </Grid>
+                                  </>
+                                )}
+                              </Grid>
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  )}
 
-                {myWeekState['tasks'] && (
-                  <TableRow key="taskDivider">
-                    <TableCell colSpan={6} align="center" className={classes.tableHeaderCellCheckbox}>
-                      Tasks
-                    </TableCell>
-                  </TableRow>
-                )}
-                {myWeekState['tasks'] &&
-                  Object.keys(myWeekState['tasks']).map((taskKey) => {
-                    return (
-                      <TableRow key={taskKey}>
-                        <TableCell className={classes.tableBodyCellCheckbox} align="center">
-                          {taskKey}
-                        </TableCell>
-                        {dayKeysArray.map((dayKey) => {
-                          return (
-                            <TableCell className={classes.tableBodyCell} key={taskKey + dayKey} align="center">
-                              {Object.keys(myWeekState['tasks'][taskKey]).includes(dayKey) ? (
-                                <CheckCircleIcon fontSize="small" color="primary" />
-                              ) : (
-                                ''
-                              )}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
-                {myWeekState['roomTasks'] && (
-                  <TableRow key="roomTaskDivider">
-                    <TableCell colSpan={6} align="center" className={classes.tableHeaderCellCheckbox}>
-                      Room Tasks
-                    </TableCell>
-                  </TableRow>
-                )}
-                {myWeekState['roomTasks'] &&
-                  Object.keys(myWeekState['roomTasks']).map((taskKey) => {
-                    return (
-                      <TableRow key={taskKey}>
-                        <TableCell className={classes.tableBodyCellCheckbox} align="center">
-                          {taskKey}
-                        </TableCell>
-                        {dayKeysArray.map((dayKey) => {
-                          return (
-                            <TableCell className={classes.tableBodyCell} key={taskKey + dayKey} align="center">
-                              {Object.keys(myWeekState['roomTasks'][taskKey]).includes(dayKey)
-                                ? Object.keys(myWeekState['roomTasks'][taskKey][dayKey]).map((item) => {
-                                    return (
-                                      <CheckCircleIcon
-                                        key={taskKey + dayKey + item}
-                                        fontSize="small"
-                                        className={classes[item]}
-                                      />
-                                    );
-                                  })
-                                : ''}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                  {myWeekState['tasks'] && (
+                    <TableRow key="taskDivider">
+                      <TableCell colSpan={6} align="center" className={classes.tableHeaderCellCheckbox}>
+                        Tasks
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {myWeekState['tasks'] &&
+                    Object.keys(myWeekState['tasks']).map((taskKey) => {
+                      return (
+                        <TableRow key={taskKey}>
+                          <TableCell className={classes.tableBodyCellCheckbox} align="center">
+                            {taskKey}
+                          </TableCell>
+                          {dayKeysArray.map((dayKey) => {
+                            return (
+                              <TableCell className={classes.tableBodyCell} key={taskKey + dayKey} align="center">
+                                {Object.keys(myWeekState['tasks'][taskKey]).includes(dayKey) ? (
+                                  <CheckCircleIcon fontSize="small" color="primary" />
+                                ) : (
+                                  ''
+                                )}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      );
+                    })}
+                  {myWeekState['roomTasks'] && (
+                    <TableRow key="roomTaskDivider">
+                      <TableCell colSpan={6} align="center" className={classes.tableHeaderCellCheckbox}>
+                        Room Tasks
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {myWeekState['roomTasks'] &&
+                    Object.keys(myWeekState['roomTasks']).map((taskKey) => {
+                      return (
+                        <TableRow key={taskKey}>
+                          <TableCell className={classes.tableBodyCellCheckbox} align="center">
+                            {taskKey}
+                          </TableCell>
+                          {dayKeysArray.map((dayKey) => {
+                            return (
+                              <TableCell className={classes.tableBodyCell} key={taskKey + dayKey} align="center">
+                                {Object.keys(myWeekState['roomTasks'][taskKey]).includes(dayKey)
+                                  ? Object.keys(myWeekState['roomTasks'][taskKey][dayKey]).map((item) => {
+                                      return (
+                                        <CheckCircleIcon
+                                          key={taskKey + dayKey + item}
+                                          fontSize="small"
+                                          className={classes[item]}
+                                        />
+                                      );
+                                    })
+                                  : ''}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </Paper>
       </div>
     </>

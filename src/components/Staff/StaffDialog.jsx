@@ -6,7 +6,19 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import * as yup from 'yup';
-import { FormControl, Grid, IconButton, InputLabel, MenuItem, Select } from '@material-ui/core';
+import {
+  FormControl,
+  Grid,
+  IconButton,
+  Chip,
+  InputLabel,
+  Input,
+  makeStyles,
+  MenuItem,
+  Select,
+  Checkbox,
+  ListItemText
+} from '@material-ui/core';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 
@@ -14,13 +26,35 @@ import React, { useState } from 'react';
 
 const validationSchema = yup.object({
   name: yup.string('Enter staff name').required('Name is required'),
-  room: yup.string('Select room').required('Room is required'),
+  rooms: yup.array().of(yup.string()).min(1, 'At least one room is required'),
   role: yup.string('Role')
 });
 
+const rooms = ['Blue', 'Purple', 'Red', 'Yellow', 'Kitchen', 'Office', 'Other'];
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    // margin: theme.spacing(1),
+    minWidth: 120
+  },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
+  chip: {
+    margin: 2
+  },
+  noLabel: {
+    marginTop: theme.spacing(3)
+  },
+  menuItem: {
+    padding: 2
+  }
+}));
+
 const StaffDialog = React.memo(({ handleSaveStaff, dialogOpen, handleCloseDialog, initialData, handleRemoveStaff }) => {
   const [confirmationDialog, setConfirmationDialog] = useState(false);
-
+  const classes = useStyles();
   const formik = useFormik({
     initialValues: initialData,
     validationSchema: validationSchema,
@@ -68,23 +102,40 @@ const StaffDialog = React.memo(({ handleSaveStaff, dialogOpen, handleCloseDialog
                 />
               </Grid>
               <Grid item sm={12} xs={6}>
-                <FormControl variant="outlined" fullWidth color="primary" margin="dense">
-                  <InputLabel id="room-label">Room</InputLabel>
+                <FormControl
+                  className={classes.formControl}
+                  variant="outlined"
+                  fullWidth
+                  color="primary"
+                  margin="dense"
+                >
+                  <InputLabel id="demo-mutiple-chip-label">Room(s)</InputLabel>
                   <Select
-                    labelId="room-label"
-                    id="room"
-                    name="room"
-                    value={formik.values.room}
-                    onChange={formik.handleChange}
-                    error={formik.touched.room && Boolean(formik.errors.room)}
-                    label="Room"
+                    labelId="demo-mutiple-chip-label"
+                    id="rooms"
+                    name="rooms"
+                    multiple
                     variant="outlined"
-                    color="primary"
+                    value={formik.values.rooms}
+                    onChange={formik.handleChange}
+                    error={formik.touched.rooms && Boolean(formik.errors.rooms)}
+                    input={<Input id="select-multiple-chip" variant="outlined" />}
+                    renderValue={(selected) => (
+                      <div className={classes.chips}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} className={classes.chip} />
+                        ))}
+                      </div>
+                    )}
                   >
-                    <MenuItem value="Blue">Blue</MenuItem>
-                    <MenuItem value="Purple">Purple</MenuItem>
-                    <MenuItem value="Red">Red</MenuItem>
-                    <MenuItem value="Yellow">Yellow</MenuItem>
+                    {rooms.map((roomItem) => {
+                      return (
+                        <MenuItem key={roomItem} value={roomItem} className={classes.menuItem}>
+                          <Checkbox checked={formik.values.rooms.indexOf(roomItem) > -1} className={classes.menuItem} />
+                          <ListItemText primary={roomItem} className={classes.menuItem} />
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
                 </FormControl>
               </Grid>

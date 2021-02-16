@@ -1,8 +1,13 @@
-import React from 'react';
+import { Button, Container } from '@material-ui/core';
+import React, { useContext } from 'react';
+import { WeekContext } from '../contexts/WeekContext';
 const Home = () => {
+  const { setCurrentWeekId } = useContext(WeekContext);
   return (
-    <div style={{ height: '100%', width: '100%', padding: 0, display: 'flex', justifyContent: 'center' }}>
-      <img src="/mcg.jpg" alt="MCG Banner"></img>
+    <div style={{ height: '100%', width: '100%' }}>
+      <Container maxWidth={'md'}>
+        <Button onClick={() => setCurrentWeekId('BASE')}>Edit Base</Button>
+      </Container>
     </div>
   );
 };

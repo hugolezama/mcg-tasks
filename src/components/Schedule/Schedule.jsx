@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import moment from 'moment';
 
 import { WeekContext } from '../../contexts/WeekContext';
 import firebaseRef from '../../firebase/firebaseConfig';
@@ -7,14 +6,12 @@ import ScheduleTable from './ScheduleTable';
 
 const Schedule = () => {
   const [stateSchedule, setStateSchedule] = useState({});
-  const { startOfWeek } = useContext(WeekContext);
+  const { currentWeekId } = useContext(WeekContext);
 
   useEffect(() => {
     (async () => {
       try {
-        const scheduleSnap = await firebaseRef
-          .child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/schedule`)
-          .once('value');
+        const scheduleSnap = await firebaseRef.child(`weeks/${currentWeekId}/schedule`).once('value');
         const data = scheduleSnap.val();
 
         setStateSchedule(data || {});
@@ -22,27 +19,28 @@ const Schedule = () => {
         console.error(err);
       }
     })();
-  }, [startOfWeek]);
+  }, [currentWeekId]);
 
   const saveScheduleItem = async (staffId, index, values, dayOff) => {
     try {
-      const ref = await firebaseRef.child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/schedule/${staffId}`);
-      await ref.child(index).update({
+      const ref = await firebaseRef.child(`weeks/${currentWeekId}/schedule/${staffId}`);
+      await ref.child(index).set({
         time: values,
         dayOff
       });
 
-      let prevSched = Object.assign(stateSchedule);
-      prevSched[staffId][index].time = [];
-      prevSched[staffId][index].dayOff = dayOff;
-
-      if (!dayOff) {
-        values.forEach((timeValue) => {
-          prevSched[staffId][index].time.push(timeValue);
-        });
-      }
-
-      setStateSchedule(prevSched);
+      setStateSchedule((prevSched) => {
+        return {
+          ...prevSched,
+          [staffId]: {
+            ...prevSched[staffId],
+            [index]: {
+              time: values,
+              dayOff
+            }
+          }
+        };
+      });
     } catch (err) {
       console.error(err);
     }
@@ -50,23 +48,14 @@ const Schedule = () => {
 
   const addStaffSchedule = async (staffId) => {
     try {
-      const ref = await firebaseRef.child(`weeks/${moment(startOfWeek).format('MM-DD-YYYY')}/schedule/${staffId}`);
+      const ref = await firebaseRef.child(`weeks/${currentWeekId}/schedule/${staffId}`);
 
       const defaultDay = {
         dayOff: false,
-        time: {
-          0: '07:00',
-          1: '16:00',
-          2: '13:00'
-        }
+        time: ['07:00', '16:00', '13:00']
       };
-      const defaultSched = {
-        0: defaultDay,
-        1: defaultDay,
-        2: defaultDay,
-        3: defaultDay,
-        4: defaultDay
-      };
+      const defaultSched = [defaultDay, defaultDay, defaultDay, defaultDay, defaultDay];
+
       await ref.set(defaultSched);
       setStateSchedule((prev) => {
         return {
@@ -79,12 +68,30 @@ const Schedule = () => {
     }
   };
 
+  const deleteStaffSchedule = async (staffId) => {
+    try {
+      const ref = firebaseRef.child(`weeks/${currentWeekId}/schedule/${staffId}`);
+
+      await ref.set(null);
+      setStateSchedule((prev) => {
+        const newObject = { ...prev };
+        delete newObject[staffId];
+        return newObject;
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
-    <ScheduleTable
-      stateSchedule={stateSchedule}
-      saveScheduleItem={saveScheduleItem}
-      addStaffSchedule={addStaffSchedule}
-    ></ScheduleTable>
+    <>
+      <ScheduleTable
+        stateSchedule={stateSchedule}
+        saveScheduleItem={saveScheduleItem}
+        addStaffSchedule={addStaffSchedule}
+        deleteStaffSchedule={deleteStaffSchedule}
+      ></ScheduleTable>
+    </>
   );
 };
 
