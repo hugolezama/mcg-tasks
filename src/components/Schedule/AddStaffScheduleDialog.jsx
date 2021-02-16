@@ -100,7 +100,7 @@ const AddStaffScheduleDialog = React.memo(({ addStaffSchedule, dialogOpen, handl
                     </Grid>
 
                     <Grid item>
-                      <Button color="primary" variant="outlined" type="submit" onClick={submitForm} form="staffForm">
+                      <Button color="primary" variant="outlined" type="submit" onClick={submitForm}>
                         Save
                       </Button>
                     </Grid>
