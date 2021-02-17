@@ -48,7 +48,8 @@ const drawers = [
   {
     key: 'Week Notes',
     path: '/notes',
-    icon: MenuBookIcon
+    icon: MenuBookIcon,
+    public: true
   },
   {
     key: 'Schedule',
@@ -192,7 +193,7 @@ export default function Layout(props) {
   const [open, setOpen] = useState(true);
   const [confirmationOpen, setConfirmationOpen] = useState(false);
   const { startOfWeek, setStartOfWeek, currentWeek, validateWeekCreated, createWeekFromBase } = useContext(WeekContext);
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
 
   React.useEffect(() => {
     if (window.innerWidth < 600) {
@@ -225,7 +226,9 @@ export default function Layout(props) {
     if (res) {
       setStartOfWeek(nWeek);
     } else {
-      setConfirmationOpen(true);
+      if (localStorage.getItem('user')) {
+        setConfirmationOpen(true);
+      }
     }
   };
 
@@ -236,6 +239,7 @@ export default function Layout(props) {
   const handleLogout = () => {
     firebaseApp.auth().signOut();
     localStorage.removeItem('user');
+    setCurrentUser(null);
     history.push('/login');
   };
 

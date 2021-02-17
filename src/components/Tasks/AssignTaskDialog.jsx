@@ -25,8 +25,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3)
   }
 }));
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+const ITEM_HEIGHT = 70;
+const ITEM_PADDING_TOP = 60;
 const MenuProps = {
   PaperProps: {
     style: {

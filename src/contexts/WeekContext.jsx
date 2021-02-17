@@ -38,6 +38,11 @@ export const WeekProvider = ({ children }) => {
     await weeksRef.child(week.format('MM-DD-YYYY')).set(baseWeek.val());
   };
 
+  const deleteCurrentWeek = async () => {
+    const weeksRef = await firebaseRef.child(`weeks`);
+    await weeksRef.child(currentWeekId).set(null);
+    setCurrentWeekId(BASE_WEEK_ID);
+  };
   return (
     <WeekContext.Provider
       value={{
@@ -48,7 +53,8 @@ export const WeekProvider = ({ children }) => {
         setCurrentWeekId,
         validateWeekCreated,
         createWeekFromBase,
-        BASE_WEEK_ID
+        BASE_WEEK_ID,
+        deleteCurrentWeek
       }}
     >
       {children}

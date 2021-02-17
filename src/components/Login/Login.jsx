@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter, Redirect, Link as RouterLink } from 'react-router-dom';
 import PasswordReset from './PasswordReset';
 
 const validationSchema = yup.object({
@@ -34,19 +34,28 @@ const useStyles = makeStyles((theme) => ({
   flexImg: {
     width: '100%',
     maxWidth: 900,
-    height: 'auto'
+    height: 'auto',
+    zIndex: 1
   },
   paper: {
     padding: 20
   },
   card: {
-    minWidth: '70%'
+    minWidth: '70%',
+    zIndex: 200
   },
   formInput: {
     paddingTop: 10,
     paddingBottom: 20,
     paddingRight: 30,
     paddingLeft: 30
+  },
+
+  formLink: {
+    paddingTop: 0,
+    paddingBottom: 10,
+    paddingRight: 20,
+    paddingLeft: 20
   },
   cardHeader: {
     textAlign: 'center',
@@ -94,64 +103,71 @@ const Login = ({ history }) => {
       <Container maxWidth={'md'}>
         <img src="/mcg.jpg" alt="MCG Banner" className={classes.flexImg}></img>
 
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <Grid container spacing={3} justify={'center'}>
-              <Card className={classes.card}>
-                <CardHeader
-                  title={
-                    <>
-                      <LockOutlinedIcon fontSize="large" /> <Typography variant="h4">Login</Typography>
-                    </>
-                  }
-                  className={classes.cardHeader}
-                ></CardHeader>
+        <Container maxWidth={'sm'}>
+          <Card className={classes.card}>
+            <CardHeader
+              title={
+                <>
+                  <LockOutlinedIcon fontSize="large" /> <Typography variant="h4">Login</Typography>
+                </>
+              }
+              className={classes.cardHeader}
+            ></CardHeader>
 
-                <CardContent>
-                  <form onSubmit={formik.handleSubmit}>
-                    <Grid item xs={12} className={classes.formInput}>
-                      <TextField
-                        fullWidth
-                        id="email"
-                        name="email"
-                        variant="outlined"
-                        label="Email"
-                        value={formik.values.email}
-                        onChange={formik.handleChange}
-                        error={formik.touched.email && Boolean(formik.errors.email)}
-                        helperText={formik.touched.email && formik.errors.email}
-                      />
+            <CardContent>
+              <form onSubmit={formik.handleSubmit}>
+                <Grid container spacing={4}>
+                  <Grid item xs={12} className={classes.formInput}>
+                    <TextField
+                      fullWidth
+                      id="email"
+                      name="email"
+                      variant="outlined"
+                      label="Email"
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
+                      error={formik.touched.email && Boolean(formik.errors.email)}
+                      helperText={formik.touched.email && formik.errors.email}
+                    />
+                  </Grid>
+                  <Grid item xs={12} className={classes.formInput}>
+                    <TextField
+                      fullWidth
+                      id="password"
+                      name="password"
+                      variant="outlined"
+                      label="Password"
+                      type="password"
+                      value={formik.values.password}
+                      onChange={formik.handleChange}
+                      error={formik.touched.password && Boolean(formik.errors.password)}
+                      helperText={formik.touched.password && formik.errors.password}
+                    />
+                  </Grid>
+
+                  <Grid container className={classes.formLink}>
+                    <Grid item xs={6} container justify="flex-start">
+                      <RouterLink to={'/'}>
+                        <Typography variant="caption">← My Week</Typography>
+                      </RouterLink>
                     </Grid>
-                    <Grid item xs={12} className={classes.formInput}>
-                      <TextField
-                        fullWidth
-                        id="password"
-                        name="password"
-                        variant="outlined"
-                        label="Password"
-                        type="password"
-                        value={formik.values.password}
-                        onChange={formik.handleChange}
-                        error={formik.touched.password && Boolean(formik.errors.password)}
-                        helperText={formik.touched.password && formik.errors.password}
-                      />
-                    </Grid>
-                    <Grid container item xs={12} className={classes.formInput} justify="flex-end">
+
+                    <Grid item xs={6} container justify="flex-end">
                       <Link href="#" onClick={() => setPasswordResetOpen(true)}>
                         <Typography variant="caption">Reset Password</Typography>
                       </Link>
                     </Grid>
-                    <Grid container justify="flex-end" className={classes.formInput}>
-                      <Button type="submit" variant="contained" color="primary" fullWidth>
-                        Sign In
-                      </Button>
-                    </Grid>
-                  </form>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </Grid>
+                  </Grid>
+                  <Grid item xs={12} className={classes.formInput}>
+                    <Button type="submit" variant="contained" color="primary" fullWidth>
+                      Sign In
+                    </Button>
+                  </Grid>
+                </Grid>
+              </form>
+            </CardContent>
+          </Card>
+        </Container>
       </Container>
 
       <PasswordReset dialogOpen={passwordResetOpen} handleCloseDialog={handleCloseDialog} />

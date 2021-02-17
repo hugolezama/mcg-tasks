@@ -5,7 +5,8 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 const Settings = () => {
-  const { currentWeekId, setCurrentWeekId, BASE_WEEK_ID } = useContext(WeekContext);
+  const { currentWeekId, setCurrentWeekId, BASE_WEEK_ID, deleteCurrentWeek } = useContext(WeekContext);
+
   return (
     <div style={{ width: '100%' }}>
       <Typography variant="h6" align="center" color="secondary" style={{ padding: 10 }}>
@@ -26,13 +27,7 @@ const Settings = () => {
               <ListItemText primary={`Edit Base Schedule`} />
             </ListItem>
             <Divider variant="middle" />
-            <ListItem
-              button
-              onClick={() => {
-                setCurrentWeekId('BASE');
-              }}
-              disabled={currentWeekId === BASE_WEEK_ID}
-            >
+            <ListItem button onClick={deleteCurrentWeek} disabled={currentWeekId === BASE_WEEK_ID}>
               <ListItemIcon>
                 <DeleteIcon color="error" />
               </ListItemIcon>
