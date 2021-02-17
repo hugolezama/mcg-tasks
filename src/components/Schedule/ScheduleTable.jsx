@@ -167,7 +167,7 @@ const ScheduleTable = ({ stateSchedule, saveScheduleItem, addStaffSchedule, dele
 
         <Paper className={classes.paper}>
           <TableContainer>
-            <Table className={classes.table} aria-labelledby="tableTitle" size="small" aria-label="schedule table">
+            <Table className={classes.table} size="small">
               <TableHead>
                 <TableRow>
                   <TableCell align="center" className={classes.tableHeaderCellCheckbox}>

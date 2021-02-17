@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser(user);
         localStorage.setItem('user', user.email);
       } else {
+        setCurrentUser(null);
         localStorage.removeItem('user');
       }
     });
@@ -21,7 +22,8 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
-        currentUser
+        currentUser,
+        setCurrentUser
       }}
     >
       {children}

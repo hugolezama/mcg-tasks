@@ -28,21 +28,27 @@ import {
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import PeopleAltRoundedIcon from '@material-ui/icons/PeopleAltRounded';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
-import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
+import SettingsIcon from '@material-ui/icons/Settings';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import MenuIcon from '@material-ui/icons/Menu';
-
+import ConfirmationDialog from './Common/ConfirmationDialog';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 const drawerWidth = 135;
 
 const drawers = [
   {
     key: 'My Week',
-    path: '/my-week',
+    path: '/',
     icon: EventNoteRoundedIcon,
+    public: true
+  },
+  {
+    key: 'Week Notes',
+    path: '/notes',
+    icon: MenuBookIcon,
     public: true
   },
   {
@@ -62,9 +68,9 @@ const drawers = [
     icon: AssignmentIcon
   },
   {
-    key: 'Staff',
-    path: '/staff',
-    icon: PeopleAltRoundedIcon
+    key: 'Settings',
+    path: '/settings',
+    icon: SettingsIcon
   }
 ];
 
@@ -99,15 +105,18 @@ const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    whiteSpace: 'nowrap',
-    height: '100vh'
+    whiteSpace: 'nowrap'
   },
   drawerOpen: {
     width: drawerWidth,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen
-    })
+    }),
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
   },
   drawerClose: {
     transition: theme.transitions.create('width', {
@@ -159,6 +168,17 @@ const useStyles = makeStyles((theme) => ({
   listItem: {
     backgroundColor: theme.palette.primary.light + ' !important',
     fontWeight: 'bold'
+  },
+  speedDial: {
+    position: 'absolute',
+    '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
+      bottom: theme.spacing(2),
+      right: theme.spacing(2)
+    },
+    '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
+      top: theme.spacing(2),
+      left: theme.spacing(2)
+    }
   }
 }));
 
@@ -171,8 +191,9 @@ export default function Layout(props) {
   const history = useHistory();
   const location = useLocation();
   const [open, setOpen] = useState(true);
-  const { startOfWeek, setStartOfWeek, currentWeek } = useContext(WeekContext);
-  const { currentUser } = useContext(AuthContext);
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
+  const { startOfWeek, setStartOfWeek, currentWeek, validateWeekCreated, createWeekFromBase } = useContext(WeekContext);
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
 
   React.useEffect(() => {
     if (window.innerWidth < 600) {
@@ -198,8 +219,17 @@ export default function Layout(props) {
     setOpen(false);
   };
 
-  const nextWeek = () => {
-    setStartOfWeek(moment(startOfWeek).add(1, 'week'));
+  const nextWeek = async () => {
+    const nWeek = moment(startOfWeek).add(1, 'week');
+    const res = await validateWeekCreated(nWeek);
+    console.log(res);
+    if (res) {
+      setStartOfWeek(nWeek);
+    } else {
+      if (localStorage.getItem('user')) {
+        setConfirmationOpen(true);
+      }
+    }
   };
 
   const prevWeek = () => {
@@ -209,11 +239,23 @@ export default function Layout(props) {
   const handleLogout = () => {
     firebaseApp.auth().signOut();
     localStorage.removeItem('user');
+    setCurrentUser(null);
     history.push('/login');
   };
 
   const activeRoute = (routeName) => {
     return location.pathname === routeName ? true : false;
+  };
+
+  const cancelConfirmationDialog = () => {
+    setConfirmationOpen(false);
+  };
+
+  const createNextWeek = async () => {
+    const nWeek = moment(startOfWeek).add(1, 'week');
+    await createWeekFromBase(nWeek);
+    setStartOfWeek(nWeek);
+    cancelConfirmationDialog();
   };
 
   return (
@@ -236,15 +278,6 @@ export default function Layout(props) {
             })}
           >
             <MenuIcon />
-          </IconButton>
-
-          <IconButton
-            onClick={() => {
-              history.push('/');
-            }}
-            style={{ marginLeft: 0 }}
-          >
-            <HomeRoundedIcon fontSize="small" />
           </IconButton>
 
           <Box display={{ xs: 'none', md: 'block' }} padding={2}>
@@ -308,7 +341,7 @@ export default function Layout(props) {
                   </div>
                 );
               })}
-
+              <div style={{ flexGrow: 2 }}> </div>
               <div className={classes.footer}>
                 <Tooltip title={open ? '' : 'Logout'} placement="right" TransitionComponent={Zoom}>
                   <ListItem button key="Logout" onClick={handleLogout} dense>
@@ -364,6 +397,13 @@ export default function Layout(props) {
       <Container className={classes.content}>
         <div className={classes.toolbar} />
         {props.children}
+        <ConfirmationDialog
+          openDialog={confirmationOpen}
+          title={'Create Next Week?'}
+          content={"Next week doesn't exist, do you want to create it using the BASE week?"}
+          handleCancel={cancelConfirmationDialog}
+          handleAccept={createNextWeek}
+        />
       </Container>
     </div>
   );

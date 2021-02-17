@@ -125,7 +125,7 @@ const TasksTable = ({ stateTasks, assignTask, addTaskRow }) => {
           </Typography>
           <Paper className={classes.paper}>
             <TableContainer>
-              <Table className={classes.table} aria-labelledby="tableTitle" size="medium" aria-label="schedule table">
+              <Table className={classes.table} size="medium">
                 <TableHead>
                   <TableRow>
                     <TableCell align="center" className={classes.tableHeaderCellCheckbox}>

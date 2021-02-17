@@ -1,6 +1,9 @@
 import React, { createContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import firebaseRef from '../firebase/firebaseConfig';
+
+const BASE_WEEK_ID = 'BASE';
 
 export const WeekContext = createContext();
 
@@ -18,11 +21,28 @@ export const WeekProvider = ({ children }) => {
   }, [startOfWeek]);
 
   useEffect(() => {
-    if (currentWeekId === 'BASE') {
+    if (currentWeekId === BASE_WEEK_ID) {
       setCurrentWeek('BASE WEEK');
     }
   }, [currentWeekId]);
 
+  const validateWeekCreated = async (week) => {
+    const weekSnap = await firebaseRef.child(`weeks/${week.format('MM-DD-YYYY')}`).once('value');
+    console.log(weekSnap.val());
+    return weekSnap.val() !== null;
+  };
+
+  const createWeekFromBase = async (week) => {
+    const baseWeek = await firebaseRef.child(`weeks/${BASE_WEEK_ID}`).once('value');
+    const weeksRef = await firebaseRef.child(`weeks`);
+    await weeksRef.child(week.format('MM-DD-YYYY')).set(baseWeek.val());
+  };
+
+  const deleteCurrentWeek = async () => {
+    const weeksRef = await firebaseRef.child(`weeks`);
+    await weeksRef.child(currentWeekId).set(null);
+    setCurrentWeekId(BASE_WEEK_ID);
+  };
   return (
     <WeekContext.Provider
       value={{
@@ -30,7 +50,11 @@ export const WeekProvider = ({ children }) => {
         setStartOfWeek,
         currentWeek,
         currentWeekId,
-        setCurrentWeekId
+        setCurrentWeekId,
+        validateWeekCreated,
+        createWeekFromBase,
+        BASE_WEEK_ID,
+        deleteCurrentWeek
       }}
     >
       {children}

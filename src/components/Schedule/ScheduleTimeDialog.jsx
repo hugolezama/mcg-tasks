@@ -166,12 +166,12 @@ const ScheduleTimeDialog = memo(
         </Dialog>
 
         <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
           open={openSnack}
           onClose={handleClose}
           autoHideDuration={2000}
         >
-          <Alert onClose={handleClose} severity="info">
+          <Alert onClose={handleClose} severity="success">
             Schedule saved!
           </Alert>
         </Snackbar>
