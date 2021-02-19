@@ -25,7 +25,6 @@ import {
   ListItemIcon,
   ListItemText
 } from '@material-ui/core';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
