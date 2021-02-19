@@ -6,7 +6,6 @@ import MyWeekTable from './MyWeekTable';
 
 const MyWeek = () => {
   const { currentWeekId } = useContext(WeekContext);
-
   const [wholeWeekState, setWholeWeekState] = useState({});
   const [myWeekState, setMyWeekState] = useState({});
   const [currentStaffMember, setCurrentStaffMember] = useState('');

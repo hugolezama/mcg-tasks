@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useStyles } from './styles.js';
 import PropTypes from 'prop-types';
 import {
   TableContainer,
@@ -9,7 +10,6 @@ import {
   TableRow,
   Paper,
   Grid,
-  makeStyles,
   FormControl,
   InputLabel,
   Select,
@@ -19,65 +19,11 @@ import {
 import moment from 'moment';
 import AccessTimeRoundedIcon from '@material-ui/icons/AccessTimeRounded';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
-import { useContext, useEffect, useState } from 'react';
 import { StaffContext } from '../../contexts/StaffContext';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 const dayHeaders = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const dayKeysArray = ['0', '1', '2', '3', '4'];
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    padding: theme.spacing(0),
-    width: '100%',
-    height: '100%'
-  },
-
-  tableHeaderCellCheckbox: {
-    backgroundColor: '#f4f4f4',
-    padding: 2
-  },
-  tableHeaderCell: {
-    borderLeft: '1px dotted #aaa',
-    borderRight: '1px dotted #aaa',
-    minWidth: 100,
-    color: theme.palette.primary.dark,
-    backgroundColor: '#f4f4f4',
-    fontWeight: 'bold',
-    fontSize: 14
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120
-  },
-  tableBodyCellCheckbox: {
-    backgroundColor: '#f4f4f4',
-    fontWeight: 'bold'
-  },
-  tableBodyCell: {
-    borderLeft: '1px dotted #aaa',
-    borderRight: '1px dotted #aaa',
-    padding: 5,
-    minWidth: 100,
-    fontSize: 12,
-    '&:hover': {
-      backgroundColor: theme.palette.primary.light,
-      cursor: 'pointer'
-    }
-  },
-  Purple: {
-    color: '#b19cd9'
-  },
-  Blue: {
-    color: '#86d8f7'
-  },
-  Yellow: {
-    color: '#fdfd96'
-  },
-  Red: {
-    color: '#ff6961'
-  }
-}));
 
 const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember }) => {
   const classes = useStyles();
@@ -100,7 +46,7 @@ const MyWeekTable = ({ myWeekState, currentStaffMember, setCurrentStaffMember })
   return (
     <>
       <div style={{ width: '100%' }}>
-        <Typography variant="h6" align="center" color="secondary" style={{ padding: 10, paddingBottom: 0 }}>
+        <Typography variant="h6" align="center" color="secondary" className={classes.pageTitle}>
           My Week
         </Typography>
         <Grid container spacing={0} justify="center">
