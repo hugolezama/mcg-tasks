@@ -18,7 +18,8 @@ import * as yup from 'yup';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { withRouter, Redirect, Link as RouterLink } from 'react-router-dom';
 import PasswordReset from './PasswordReset';
-
+import Background from '../../assets/montessori_bg.jpeg';
+import MobileBackground from '../../assets/mobile_bg.jpeg';
 const validationSchema = yup.object({
   email: yup.string('Enter your email').email('Enter a valid email').required('Email is required'),
   password: yup.string('Enter your password').required('Password is required')
@@ -28,8 +29,16 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.secondary.light,
-    width: '100%',
-    height: '100vh'
+    width: '100vw',
+    height: '100vh',
+
+    backgroundImage: `url(${Background}); no-repeat`,
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+
+    [theme.breakpoints.down('sm')]: {
+      backgroundImage: `url(${MobileBackground}); no-repeat`
+    }
   },
   flexImg: {
     width: '100%',
