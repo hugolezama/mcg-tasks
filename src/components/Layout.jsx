@@ -25,47 +25,46 @@ import {
   ListItemIcon,
   ListItemText
 } from '@material-ui/core';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import EventNoteRoundedIcon from '@material-ui/icons/EventNoteRounded';
 import SettingsIcon from '@material-ui/icons/Settings';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import MenuIcon from '@material-ui/icons/Menu';
 import ConfirmationDialog from './Common/ConfirmationDialog';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
+import { AiOutlineSchedule } from 'react-icons/ai';
+import { SiGoogleclassroom } from 'react-icons/si';
+
+import { BiTask, BiCalendarWeek, BiLogIn, BiLogOut } from 'react-icons/bi';
+import { GoNote } from 'react-icons/go';
 const drawerWidth = 135;
 
 const drawers = [
   {
     key: 'My Week',
     path: '/',
-    icon: EventNoteRoundedIcon,
+    icon: BiCalendarWeek,
     public: true
   },
   {
     key: 'Week Notes',
     path: '/notes',
-    icon: MenuBookIcon,
+    icon: GoNote,
     public: true
   },
   {
     key: 'Schedule',
     path: '/schedule',
-    icon: AccessTimeIcon
+    icon: AiOutlineSchedule
   },
 
   {
     key: 'Tasks',
     path: '/tasks',
-    icon: AssignmentIndIcon
+    icon: BiTask
   },
   {
     key: 'Room Tasks',
     path: '/room-tasks',
-    icon: AssignmentIcon
+    icon: SiGoogleclassroom
   },
   {
     key: 'Settings',
@@ -153,8 +152,18 @@ const useStyles = makeStyles((theme) => ({
       fontSize: theme.typography.fontSize - 2
     }
   },
+  listIcon: {
+    minWidth: '30px',
+    paddingLeft: 0
+  },
   icon: {
-    minWidth: '30px'
+    color: theme.palette.secondary.main
+  },
+  loginIcon: {
+    color: theme.palette.primary.main
+  },
+  logoutIcon: {
+    color: theme.palette.error.main
   },
   logout: {
     color: theme.palette.error.main
@@ -331,8 +340,8 @@ export default function Layout(props) {
                         selected={activeRoute(drawer.path)}
                         classes={{ selected: classes.listItem }}
                       >
-                        <ListItemIcon className={classes.icon}>
-                          <drawer.icon color="secondary" />
+                        <ListItemIcon className={classes.listIcon}>
+                          <drawer.icon className={classes.icon} size="25" />
                         </ListItemIcon>
                         <ListItemText primary={drawer.key} />
                       </ListItem>
@@ -345,8 +354,8 @@ export default function Layout(props) {
               <div className={classes.footer}>
                 <Tooltip title={open ? '' : 'Logout'} placement="right" TransitionComponent={Zoom}>
                   <ListItem button key="Logout" onClick={handleLogout} dense>
-                    <ListItemIcon className={classes.icon}>
-                      <ExitToAppIcon color="error" style={{ transform: 'rotate(-180deg)' }} />
+                    <ListItemIcon className={classes.listIcon}>
+                      <BiLogOut className={classes.logoutIcon} size="25" />
                     </ListItemIcon>
                     <ListItemText primary="Logout" className={classes.logout} />
                   </ListItem>
@@ -369,8 +378,8 @@ export default function Layout(props) {
                         selected={activeRoute(drawer.path)}
                         classes={{ selected: classes.listItem }}
                       >
-                        <ListItemIcon className={classes.icon}>
-                          <drawer.icon color="secondary" />
+                        <ListItemIcon className={classes.listIcon}>
+                          <drawer.icon color="secondary" size="25" />
                         </ListItemIcon>
                         <ListItemText primary={drawer.key} />
                       </ListItem>
@@ -382,8 +391,8 @@ export default function Layout(props) {
               <div className={classes.footer}>
                 <Tooltip title={open ? '' : 'Login'} placement="right" TransitionComponent={Zoom}>
                   <ListItem button key="Login" onClick={() => history.push('/login')} dense>
-                    <ListItemIcon className={classes.icon}>
-                      <ExitToAppIcon color="primary" />
+                    <ListItemIcon className={classes.listIcon}>
+                      <BiLogIn className={classes.loginIcon} size="25" />
                     </ListItemIcon>
                     <ListItemText primary="Login" className={classes.login} />
                   </ListItem>
