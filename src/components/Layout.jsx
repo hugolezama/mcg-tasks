@@ -33,7 +33,7 @@ import ConfirmationDialog from './Common/ConfirmationDialog';
 import { AiOutlineSchedule } from 'react-icons/ai';
 import { SiGoogleclassroom } from 'react-icons/si';
 
-import { BiTask, BiCalendarWeek, BiLogIn, BiLogOut } from 'react-icons/bi';
+import { BiTask, BiCalendarWeek, BiLogIn, BiLogOut, BiMale, BiGroup } from 'react-icons/bi';
 import { GoNote } from 'react-icons/go';
 const drawerWidth = 135;
 
@@ -65,6 +65,11 @@ const drawers = [
     key: 'Room Tasks',
     path: '/room-tasks',
     icon: SiGoogleclassroom
+  },
+  {
+    key: 'Staff',
+    path: '/staff',
+    icon: BiGroup
   },
   {
     key: 'Settings',
