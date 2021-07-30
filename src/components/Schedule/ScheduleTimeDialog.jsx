@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import MuiAlert from '@material-ui/lab/Alert';
+import { CloseIcon } from '@material-ui/data-grid';
 
 const scheduleValidation = Yup.object().shape({
   startTime: Yup.date().required('Start time is required'),
@@ -72,6 +73,11 @@ const ScheduleTimeDialog = memo(
             {({ values, touched, resetForm }) => (
               <Form>
                 <DialogTitle id="form-dialog-title">
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start' }}>
+                    <IconButton aria-label="close" onClick={handleCloseDialog}>
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <IconButton
                       onClick={() => {

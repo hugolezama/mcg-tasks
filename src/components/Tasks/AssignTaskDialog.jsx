@@ -1,10 +1,21 @@
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-import { Chip, FormControl, Grid, Input, InputLabel, makeStyles, MenuItem, Select } from '@material-ui/core';
+import {
+  Chip,
+  FormControl,
+  Grid,
+  IconButton,
+  Input,
+  InputLabel,
+  makeStyles,
+  MenuItem,
+  Select
+} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React, { memo, useContext, useEffect, useState } from 'react';
 import { StaffContext } from '../../contexts/StaffContext';
+import { CloseIcon } from '@material-ui/data-grid';
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
@@ -80,8 +91,15 @@ const AssignTaskDialog = memo(({ assignTask, dialogOpen, handleCloseDialog, init
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        {initialData.taskName} - {initialData.room ? initialData.room + ' - ' : ''}
-        {days[initialData.weekDay]}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start' }}>
+          <IconButton aria-label="close" onClick={handleCloseDialog}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          {initialData.taskName} - {initialData.room ? initialData.room + ' - ' : ''}
+          {days[initialData.weekDay]}
+        </div>
       </DialogTitle>
 
       <div style={{ padding: 20 }}>
